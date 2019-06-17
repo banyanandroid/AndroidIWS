@@ -8,4 +8,22 @@
     <color name="secondary_text">#757575</color>
     <color name="icons">#FFFFFF</color>
     <color name="divider">#BDBDBD</color>
+
+
+    <color name="color_purpile">#4483ED</color>
+    <color name="color_blue">#4483ED</color>
+
+    <color name="color_divider">#BDBDBD</color>
+    <color name="color_background">#dfdfdf</color>
+    <color name="color_secondary_text_color">#808080</color>
+
+
+    <color name="color_gray_attract">#bdc3c7</color>
+    <color name="color_social_attract">#06beb6</color>
+    <color name="color_wood_attract">#eacda3</color>
+    <color name="color_rosana_attract">#ffafbd</color>
+
+    <color name="colorTextPrimary">#000000</color>
+    <color name="colorTextSecondary">#808080</color>
+
 </resources>

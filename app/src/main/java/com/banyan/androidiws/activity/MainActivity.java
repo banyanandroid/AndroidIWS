@@ -1,12 +1,15 @@
-package com.banyan.androidiws;
+package com.banyan.androidiws.activity;
 
 import android.graphics.Color;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.CardView;
 import android.view.View;
 import android.widget.GridLayout;
 import android.widget.Toast;
+
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
+
+import com.banyan.androidiws.R;
 
 public class MainActivity extends AppCompatActivity {
 

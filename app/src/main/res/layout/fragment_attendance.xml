@@ -1,0 +1,232 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    tools:context=".fragment.Fragment_Attendance"
+    android:background="@color/color_background"
+    android:gravity="center">
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardCornerRadius="2dp"
+        android:layout_margin="@dimen/dimen_horizontal"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            >
+
+
+            <LinearLayout
+                android:id="@+id/layout_present"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/dimen_horizontal"
+                android:visibility="visible"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/dimen_horizontal"
+                    android:orientation="vertical"
+                    >
+
+              <!--      <ImageView
+                        android:layout_width="100dp"
+                        android:layout_height="100dp"
+                        android:src="@drawable/ic_fingerprint_black_512dp"
+                        android:layout_gravity="center"/>-->
+
+                    <ImageView
+                        android:layout_width="50dp"
+                        android:layout_height="50dp"
+                        android:layout_gravity="center"
+                        android:src="@drawable/ic_calender"
+                        android:layout_marginTop="@dimen/dimen_horizontal"/>
+
+                    <LinearLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:orientation="vertical">
+
+
+                        <TextView
+                            android:id="@+id/text_date"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/dimen_6"
+                            android:text="25 January 2018"
+                            android:textColor="@color/color_secondary_text_color"
+                            android:textSize="25sp" />
+
+                        <TextView
+                            android:id="@+id/text_time"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="@dimen/dimen_6"
+                            android:text="10:10 AM"
+                            android:textColor="@color/color_secondary_text_color"
+                            android:textSize="20sp" />
+
+                    </LinearLayout>
+                </LinearLayout>
+
+                <Button
+                    android:id="@+id/button_present"
+                    android:layout_width="200dp"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_button"
+                    android:text="Present"
+                    android:textColor="@android:color/white"
+                    android:textStyle="bold"
+                    android:layout_marginTop="20dp"
+                    android:layout_gravity="center"
+                    />
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/dimen_horizontal"
+                    android:gravity="center"
+                    android:text="Press above to register attendance"
+                    android:textColor="@color/color_secondary_text_color"
+                    android:textSize="16sp"
+                    android:layout_marginBottom="@dimen/dimen_horizontal"/>
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/layout_attendance_status"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="@dimen/dimen_horizontal"
+                android:visibility="gone"
+                >
+
+
+                <ImageView
+                    android:layout_width="100dp"
+                    android:layout_height="100dp"
+                    android:src="@drawable/ic_fingerprint_black_512dp"
+                    android:layout_gravity="center"
+                    android:layout_marginTop="@dimen/dimen_horizontal"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="@dimen/dimen_horizontal"
+                    >
+
+                    <TextView
+                        android:id="@+id/text_attendance_status"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="Present"
+                        android:textStyle="bold"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="30sp"
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        android:layout_gravity="center"
+                        android:paddingLeft="@dimen/dimen_horizontal"
+                        android:paddingRight="@dimen/dimen_horizontal"
+                        android:paddingTop="@dimen/dimen_4"
+                        android:paddingBottom="@dimen/dimen_4"/>
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Attendance Status"
+                        android:textColor="@color/color_secondary_text_color"
+                        android:textSize="20sp"
+                        android:gravity="center"/>
+
+                </LinearLayout>
+
+
+                <View
+                    android:layout_width="match_parent"
+                    android:layout_height="2dp"
+                    android:background="@color/color_divider"
+                    android:layout_marginTop="@dimen/dimen_horizontal"
+                    android:layout_marginBottom="@dimen/dimen_horizontal"
+                    android:layout_marginLeft="@dimen/dimen_horizontal"
+                    android:layout_marginRight="@dimen/dimen_horizontal"/>
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <TextView
+                        android:id="@+id/text_attendance_remarks"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="-"
+                        android:textColor="@color/colorTextPrimary"
+                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:ellipsize="end"
+                        android:maxLines="1"
+                        />
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Remarks"
+                        android:textColor="@color/color_secondary_text_color"
+                        android:textSize="18sp"
+                        android:gravity="center"
+                        android:layout_marginTop="@dimen/dimen_horizontal"/>
+
+
+                </LinearLayout>
+
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="30dp"
+                    android:layout_marginBottom="@dimen/dimen_horizontal"
+                    android:gravity="center"
+                    android:background="@android:color/holo_green_dark"
+                    android:layout_marginLeft="@dimen/dimen_horizontal"
+                    android:layout_marginRight="@dimen/dimen_horizontal">
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="Attendance Registered"
+                        android:textColor="@android:color/white"
+                        android:textSize="20sp"
+                        android:padding="@dimen/dimen_horizontal"
+                        android:layout_gravity="center"
+                        />
+
+                </LinearLayout>
+
+
+            </LinearLayout>
+
+
+        </LinearLayout>
+
+    </androidx.cardview.widget.CardView>
+
+
+
+</LinearLayout>

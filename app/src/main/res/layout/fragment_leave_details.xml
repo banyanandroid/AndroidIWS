@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="@color/color_background"
+    >
+
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="LEAVE BALANCE"
+        android:textColor="@color/colorTextPrimary"
+        android:textSize="16sp"
+        android:textStyle="bold"
+        android:layout_marginTop="@dimen/dimen_horizontal"
+        android:layout_marginLeft="@dimen/dimen_horizontal"
+        android:layout_marginBottom="@dimen/dimen_horizontal"/>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_view_leave_balance"
+        android:scrollbars="vertical"
+        android:layout_width="match_parent"
+        android:background="#dfdfdf"
+        android:layout_height="@dimen/dimen_request_holder_size"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="1"
+        android:layout_marginTop="@dimen/dimen_horizontal">
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="LEAVE REQUEST"
+            android:textColor="@color/colorTextPrimary"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:layout_marginLeft="@dimen/dimen_horizontal"
+            android:layout_weight=".9"/>
+
+        <LinearLayout
+            android:id="@+id/filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_weight=".1">
+
+            <ImageView
+                android:id="@+id/image_filter"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_gravity="center"
+                android:src="@drawable/ic_filter_black" />
+
+        <TextView
+            android:id="@+id/text_filter"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="FILTER"
+            android:textSize="16sp"
+            android:textStyle="bold"
+            android:textColor="@color/colorTextPrimary"
+            android:layout_marginRight="@dimen/dimen_horizontal"
+            android:layout_marginLeft="@dimen/dimen_horizontal"
+            />
+        </LinearLayout>
+    </LinearLayout>
+
+    <ListView
+        android:id="@+id/list_view_leave_request"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginTop="@dimen/dimen_horizontal"
+        android:layout_marginLeft="@dimen/dimen_horizontal"
+        android:layout_marginRight="@dimen/dimen_horizontal"
+        android:divider="@null"
+        >
+    </ListView>
+
+    <TextView
+        android:id="@+id/text_message"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No Leave To Show"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:textColor="@color/colorPrimary"
+        android:gravity="center"
+        android:visibility="gone"/>
+
+</LinearLayout>

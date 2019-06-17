@@ -1,3 +1,42 @@
 <resources>
     <string name="app_name">IWS</string>
+
+
+    <string name="label_finger">Attendance</string>
+    <string name="label_leave">Leave</string>
+    <string name="label_about_us">About</string>
+    <string name="logout">Logout</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="openDrawer">Open Drawer</string>
+    <string name="closeDrawer">Close Drawer</string>
+
+    <string-array name="nav_item_activity_titles">
+        <item>Attendance</item>
+        <item>Attendance Report</item>
+        <item>Leave</item>
+        <item>My Profile</item>
+        <item>About</item>
+        <item>Logout</item>
+    </string-array>
+
+    <string-array name="string_array_color">
+        <item>#24c6d5</item>
+        <item>#57dd86</item>
+        <item>#ad7dcf</item>
+        <item>#ff484d</item>
+        <item>#fcba59</item>
+        <item>#24c6d5</item>
+    </string-array>
+
+    <string-array name="string_array_leave_filter">
+        <item >Pending</item>
+        <item >Approved</item>
+        <item >Rejected</item>
+        <item >All</item>
+    </string-array>
+
+    <integer name="slide_animation_duration">300</integer>
+
 </resources>

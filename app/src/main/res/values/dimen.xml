@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <dimen name="dimen_horizontal">10dp</dimen>
+    <dimen name="dimen_vertical">10dp</dimen>
+
+    <dimen name="dimen_4">4dp</dimen>
+    <dimen name="dimen_6">6dp</dimen>
+
+    <dimen name="dimen_request_holder_size">140dp</dimen>
+    <dimen name="dimen_request_item_size">120dp</dimen>
+
+    <dimen name="dimen_calender_report_size">300dp</dimen>
+
+    <dimen name="dimen_text_normal">16sp</dimen>
+    <dimen name="dimen_text_big">18sp</dimen>
+
+    <dimen name="dimen_margin_normal">10dp</dimen>
+
+    <dimen name="dimen_margin_small">8dp</dimen>
+
+
+    <dimen name="dimen_profile_image_size">100dp</dimen>
+
+</resources>
