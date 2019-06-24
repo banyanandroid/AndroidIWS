@@ -31,10 +31,10 @@
     </string-array>
 
     <string-array name="string_array_leave_filter">
-        <item >Pending</item>
-        <item >Approved</item>
-        <item >Rejected</item>
-        <item >All</item>
+        <item>Pending</item>
+        <item>Approved</item>
+        <item>Rejected</item>
+        <item>All</item>
     </string-array>
 
     <integer name="slide_animation_duration">300</integer>

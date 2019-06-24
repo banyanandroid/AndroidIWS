@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.banyan.androidiws.R;
-import com.banyan.androidiws.fragment.Fragment_Leave_List;
+import com.banyan.androidiws.activity.Activity_Leave_List;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -66,11 +66,11 @@ public class Adapter_Leave_Request_List extends BaseAdapter {
         HashMap<String,String> result = new HashMap<>();
         result = data.get(i);
 
-        String str_leave_date = result.get(Fragment_Leave_List.TAG_LEAVE_START_DATE);
-        String str_leave_title = result.get(Fragment_Leave_List.TAG_LEAVE_REQUEST_SUBJECT);
-        String str_leave_type = result.get(Fragment_Leave_List.TAG_LEAVE_REQUEST_TYPE_NAME);
-        String str_leave_status = result.get(Fragment_Leave_List.TAG_LEAVE_REQUEST_STATUS);
-        String str_leave_total_dates = result.get(Fragment_Leave_List.TAG_LEAVE_REQUEST_TOTAL_DAYS);
+        String str_leave_date = result.get(Activity_Leave_List.TAG_LEAVE_START_DATE);
+        String str_leave_title = result.get(Activity_Leave_List.TAG_LEAVE_REQUEST_SUBJECT);
+        String str_leave_type = result.get(Activity_Leave_List.TAG_LEAVE_REQUEST_TYPE_NAME);
+        String str_leave_status = result.get(Activity_Leave_List.TAG_LEAVE_REQUEST_STATUS);
+        String str_leave_total_dates = result.get(Activity_Leave_List.TAG_LEAVE_REQUEST_TOTAL_DAYS);
 
         System.out.println("### getView str_leave_date "+str_leave_date);
         SimpleDateFormat dateFormat = new SimpleDateFormat(

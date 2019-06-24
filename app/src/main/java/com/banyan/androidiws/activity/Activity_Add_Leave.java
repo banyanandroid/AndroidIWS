@@ -32,6 +32,7 @@ import com.banyan.androidiws.global.AppConfig;
 import com.banyan.androidiws.global.Constants;
 import com.banyan.androidiws.global.ItemOffSetDecorator;
 import com.banyan.androidiws.global.Session_Manager;
+import com.banyan.androidiws.global.Util;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import org.json.JSONArray;
@@ -48,8 +49,6 @@ import java.util.Iterator;
 import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
-
-import static com.banyan.androidiws.global.Util.IsNetworkAvailable;
 
 
 public class Activity_Add_Leave extends AppCompatActivity {
@@ -81,13 +80,23 @@ public class Activity_Add_Leave extends AppCompatActivity {
     private SpotsDialog dialog;
 
     private RequestQueue queue;
+
+    private Util utility;
+
     private ArrayList<HashMap<String, String>> arrayList_leave_type;
+
+
     private int mYear, mMonth, mDay;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__add__leave);
+
+        /*********************************
+         *  SETUP
+         **********************************/
+        utility = new Util();
 
         Function_Verify_Network_Available(this);
 
@@ -115,7 +124,8 @@ public class Activity_Add_Leave extends AppCompatActivity {
         edit_start_date.setKeyListener(null);
         edit_end_date.setKeyListener(null);
 
-        //setup
+
+
         str_selected_leave_type_id = "";
         arrayList_leave_type = new ArrayList<>();
 
@@ -163,13 +173,7 @@ public class Activity_Add_Leave extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Activity_Add_Leave.this);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
-
-                editor.putString(Activity_Main.TAG_CALLING_ACTIVITY, Activity_Main.TAG_ACTIVITY_LEAVE_REQUEST);
-                editor.commit();
-
-                Intent intent = new Intent(Activity_Add_Leave.this, Activity_Main.class);
+                Intent intent = new Intent(Activity_Add_Leave.this, MainActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);  // close activity
             }
@@ -334,10 +338,10 @@ public class Activity_Add_Leave extends AppCompatActivity {
 
                                 SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Activity_Add_Leave.this);
                                 SharedPreferences.Editor editor = sharedPreferences.edit();
-                                editor.putString(Activity_Main.TAG_CALLING_ACTIVITY, Activity_Main.TAG_ACTIVITY_LEAVE_REQUEST);
+                                editor.putString(Activity_Main_Not_Used.TAG_CALLING_ACTIVITY, Activity_Main_Not_Used.TAG_ACTIVITY_LEAVE_REQUEST);
                                 editor.commit();
 
-                                Intent intent = new Intent(Activity_Add_Leave.this, Activity_Main.class);
+                                Intent intent = new Intent(Activity_Add_Leave.this, MainActivity.class);
                                 startActivity(intent);
                                 finish();
                                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
@@ -539,10 +543,10 @@ public class Activity_Add_Leave extends AppCompatActivity {
 
                                         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Activity_Add_Leave.this);
                                         SharedPreferences.Editor editor = sharedPreferences.edit();
-                                        editor.putString(Activity_Main.TAG_CALLING_ACTIVITY, Activity_Main.TAG_ACTIVITY_LEAVE_REQUEST);
+                                        editor.putString(Activity_Main_Not_Used.TAG_CALLING_ACTIVITY, Activity_Main_Not_Used.TAG_ACTIVITY_LEAVE_REQUEST);
                                         editor.commit();
 
-                                        Intent intent = new Intent(Activity_Add_Leave.this, Activity_Main.class);
+                                        Intent intent = new Intent(Activity_Add_Leave.this, MainActivity.class);
                                         startActivity(intent);
                                         finish();
                                         overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
@@ -647,26 +651,14 @@ public class Activity_Add_Leave extends AppCompatActivity {
         queue.add(request);
     }
 
-    public void Function_Verify_Network_Available(Context context) {
-        try {
-            if (!IsNetworkAvailable(context)) {
-
-                new AlertDialog.Builder(context)
-                        .setTitle("No Internet Connection")
-                        .setMessage("Internet Connection is Not Available.")
-                        .setCancelable(false)
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                finishAffinity();
-
-                            }
-                        }).show();
-            }
-            ;
-        } catch (Exception e) {
-            System.out.println("### Exception e " + e.getLocalizedMessage());
+    public void Function_Verify_Network_Available(Context context){
+        try{
+            if (!utility.IsNetworkAvailable(this)){
+                utility.Function_Show_Not_Network_Message(this);
+            };
+        }catch (Exception e){
+            System.out.println("### Exception e "+e.getLocalizedMessage());
         }
     }
+
 }

@@ -1,10 +1,14 @@
 package com.banyan.androidiws.global;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.text.TextUtils;
 import android.util.Patterns;
+
+import androidx.appcompat.app.AlertDialog;
 
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
@@ -20,7 +24,7 @@ public  class Util{
         return (!TextUtils.isEmpty(target) && Patterns.EMAIL_ADDRESS.matcher(target).matches());
     }
 
-    public  static boolean IsNetworkAvailable(final Context context) {
+    public  boolean IsNetworkAvailable(final Context context) {
         boolean networkAvailable = false;
         try {
             final ConnectivityManager connectivityManager = (ConnectivityManager) context.getSystemService(Context.CONNECTIVITY_SERVICE);
@@ -29,18 +33,6 @@ public  class Util{
                 networkAvailable = true;
             } else {
                 networkAvailable = false;
-
-            /*    new AlertDialog.Builder(context)
-                        .setTitle("No Internet Connection")
-                        .setMessage("Network is Not Available")
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                                      //          finishAffinity();
-                            }
-                        })
-                        .show();
-                TastyToast.makeText(context, "NetWork is Not Available",TastyToast.LENGTH_SHORT,TastyToast.WARNING);*/
             }
 
         } catch (Exception e) {
@@ -49,6 +41,22 @@ public  class Util{
         return networkAvailable;
     }
 
+    public void Function_Show_Not_Network_Message(final Activity activity){
+
+        new AlertDialog.Builder(activity)
+                .setTitle("No Internet Connection")
+                .setMessage("Internet Connection is Not Available.")
+                .setCancelable(false)
+                .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+
+                        activity.finishAffinity();
+
+                    }
+                }).show();
+
+    }
     public String getCountOfDays(String createdDateString, String expireDateString) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("dd-MM-yyyy", Locale.getDefault());
 

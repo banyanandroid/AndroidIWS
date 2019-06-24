@@ -382,12 +382,12 @@
 
                     </LinearLayout>
 
-                    <com.banyan.iws.global.NestedListview
+                    <com.banyan.androidiws.global.NestedListview
                         android:id="@+id/list_view_attendance_report"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:divider="@null"
-                        android:background="@color/color_background"></com.banyan.iws.global.NestedListview>
+                        android:background="@color/color_background"></com.banyan.androidiws.global.NestedListview>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

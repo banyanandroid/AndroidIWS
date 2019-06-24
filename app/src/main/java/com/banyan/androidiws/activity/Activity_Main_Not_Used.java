@@ -21,7 +21,6 @@ import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentTransaction;
@@ -33,14 +32,11 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.banyan.androidiws.R;
-import com.banyan.androidiws.fragment.Fragment_About;
 import com.banyan.androidiws.fragment.Fragment_Attendance;
-import com.banyan.androidiws.fragment.Fragment_Attendance_Report;
-import com.banyan.androidiws.fragment.Fragment_Leave_List;
-import com.banyan.androidiws.fragment.Fragment_Profile;
 import com.banyan.androidiws.global.AppConfig;
 import com.banyan.androidiws.global.Constants;
 import com.banyan.androidiws.global.Session_Manager;
+import com.banyan.androidiws.global.Util;
 import com.google.android.material.navigation.NavigationView;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.squareup.picasso.Picasso;
@@ -56,10 +52,8 @@ import java.util.TimerTask;
 import de.hdodenhof.circleimageview.CircleImageView;
 import dmax.dialog.SpotsDialog;
 
-import static com.banyan.androidiws.global.Util.IsNetworkAvailable;
 
-
-public class Activity_Main extends AppCompatActivity {
+public class Activity_Main_Not_Used extends AppCompatActivity {
 
     private static final String TAG_ATTENDANCE = "ATTENDANCE";
     private static final String TAG_ATTENDANCE_REPORT = "ATTENDANCE_REPORT";
@@ -73,11 +67,16 @@ public class Activity_Main extends AppCompatActivity {
     private static final String TAG_USER_ROLE = "userrole";
     private static final String TAG_USER_DEPARTMENT_ID = "departmentid";
 
-    private static final String TAG = Activity_Main.class.getSimpleName();
+    private static final String TAG = Activity_Main_Not_Used.class.getSimpleName();
 
-    public static final String TAG_ACTIVITY_ATTEDANCE_REPORT = "Fragment_Attendance_Report";
-    public static final String TAG_ACTIVITY_LEAVE_REQUEST = "Fragment_Leave_List";
+    public static final String TAG_ACTIVITY_ATTEDANCE_REPORT = "Activity_Attendance_Report_For_Months";
+    public static final String TAG_ACTIVITY_LEAVE_REQUEST = "Activity_Leave_List";
     public static final String TAG_CALLING_ACTIVITY = "calling_activity";
+
+    // 6.0 Location & Call
+    private final Integer LOCATION = 0x1;
+    private final Integer CALL = 0x2;
+    private final Integer GPS_SETTINGS = 0x7;
 
     private NavigationView navigationView;
 
@@ -85,51 +84,53 @@ public class Activity_Main extends AppCompatActivity {
 
     private View navHeader;
 
-    CircleImageView image_profile;
+    private CircleImageView image_profile;
 
     private TextView txt_name, text_profile_information;
 
     private Toolbar toolbar;
 
-    ///for exit the app
-    private static long back_pressed;
-
-    // index to identify current nav menu item
-    public static int navItemIndex = 0;
-
-    // tags used to attach the fragments
-
-
-    public static String TAG_CURRENT = TAG_ATTENDANCE;
-
-    // toolbar titles respected to selected nav menu item
-    private String[] activityTitles;
-
-    // flag to load home fragment when user presses back key
-    private boolean shouldLoadHomeFragOnBackPress = true;
-
-    String str_user_id = "", str_user_name = "", str_user_name_first_last ="", str_user_role = "", str_user_image = "", str_user_type = "", str_user_department_id = "";
-
     private TimerTask timerTask;
-    final Handler handler = new Handler();
+
+    private final Handler handler = new Handler();
 
     // Session manager
-    Session_Manager session;
-
-    // 6.0 Location & Call
-    static final Integer LOCATION = 0x1;
-    static final Integer CALL = 0x2;
-    static final Integer GPS_SETTINGS = 0x7;
+    private Session_Manager session;
 
     private Session_Manager session_manager;
+
     private SpotsDialog dialog;
+
     private RequestQueue queue;
+
+    private Util utility;
+
+    private  long back_pressed;
+
+    public  int navItemIndex = 0;
+
+    public  String TAG_CURRENT = TAG_ATTENDANCE;
+
+    private String[] activityTitles;
+
+    private boolean shouldLoadHomeFragOnBackPress = true;
+
+    private String str_user_id = "", str_user_name = "", str_user_name_first_last ="", str_user_role = "", str_user_image = "", str_user_type = "", str_user_department_id = "";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main_2);
 
+        /*********************************
+         * SETUP
+         **********************************/
+        utility = new Util();
+
+        /*************************
+        *  SESSION
+        **************************/
         Function_Verify_Network_Available(this);
 
         session = new Session_Manager(getApplicationContext());
@@ -154,13 +155,16 @@ public class Activity_Main extends AppCompatActivity {
         System.out.println("### str_user_image " + str_user_image);
         System.out.println("### str_user_name_first_last " + str_user_name_first_last);
 
+        /*************************
+         *  FIND VIEW BY ID
+         **************************/
+
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
         drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         navigationView = (NavigationView) findViewById(R.id.nav_view);
 
-        // Navigation view header
         navHeader = navigationView.getHeaderView(0);
         txt_name = (TextView) navHeader.findViewById(R.id.profile_name);
         image_profile = (CircleImageView) navHeader.findViewById(R.id.img_profile);
@@ -168,6 +172,8 @@ public class Activity_Main extends AppCompatActivity {
 
         // load toolbar titles from string resources
         activityTitles = getResources().getStringArray(R.array.nav_item_activity_titles);
+
+
 
         // load nav menu header data
         loadNavHeader();
@@ -193,6 +199,10 @@ public class Activity_Main extends AppCompatActivity {
         } else {
             showGPSDisabledAlertToUser();
         }
+
+        /*********************************
+         * ACTION
+         **********************************/
 
         if (savedInstanceState == null) {
 
@@ -244,19 +254,20 @@ public class Activity_Main extends AppCompatActivity {
 
         if (item.getItemId() == R.id.action_add_leave){
 
-            Intent intent = new Intent(Activity_Main.this, Activity_Add_Leave.class);
+            Intent intent = new Intent(Activity_Main_Not_Used.this, Activity_Add_Leave.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
             return true;
         }else if (item.getItemId() == R.id.action_attendance_report_for_days){
 
-            Intent intent = new Intent(Activity_Main.this, Activity_Attendance_Report.class);
+            Intent intent = new Intent(Activity_Main_Not_Used.this, Activity_Attendance_Report_For_Dates.class);
             startActivity(intent);
             overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
             return true;
         }
         return false;
     }
+
 
     private void loadNavHeader() {
         // name, website
@@ -265,7 +276,7 @@ public class Activity_Main extends AppCompatActivity {
 
         // Loading profile image
         if (str_user_image != null && !str_user_image.isEmpty())
-            Picasso.with(Activity_Main.this)
+            Picasso.with(Activity_Main_Not_Used.this)
                 .load( str_user_image )
                 .placeholder(R.drawable.user)
                 .into(image_profile);
@@ -319,32 +330,32 @@ public class Activity_Main extends AppCompatActivity {
     private Fragment getHomeFragment() {
         System.out.println("### getHomeFragment navItemIndex "+navItemIndex);
         switch (navItemIndex) {
-            case 0:
+         /*   case 0:
                 Fragment_Attendance fragment_attendance = new Fragment_Attendance();
                 return fragment_attendance;
 
             case 1:
-                Fragment_Attendance_Report fragment_attendance_report_for_month = new Fragment_Attendance_Report();
-                return fragment_attendance_report_for_month;
+                Activity_Attendance_Report_For_Months activity_attendance_report_for_month = new Activity_Attendance_Report_For_Months();
+                return activity_attendance_report_for_month;
 
             case 2:
-                Fragment_Leave_List fragment_leave_requests = new Fragment_Leave_List();
+                Activity_Leave_List fragment_leave_requests = new Activity_Leave_List();
                 return fragment_leave_requests;
 
             case 3:
                 getSupportActionBar().setTitle(str_user_name_first_last);
-                Fragment_Profile fragment_profile = new Fragment_Profile();
+                Activity_Account_Details fragment_profile = new Activity_Account_Details();
                 return fragment_profile;
 
             case 4:
-                Fragment_About fragment_about = new Fragment_About();
-                return fragment_about;
+                Activity_About activity_about = new Activity_About();
+                return activity_about;
 
             case 5:
                 session_manager.logoutUser();
-                Toast.makeText(Activity_Main.this, "Logout Sucessfully.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(Activity_Main_Not_Used.this, "Logout Sucessfully.", Toast.LENGTH_SHORT).show();
                 return new Fragment_Attendance();
-
+*/
             default:
                 return new Fragment_Attendance();
         }
@@ -409,9 +420,9 @@ public class Activity_Main extends AppCompatActivity {
 
                        /* try{
 
-                            dialog = new SpotsDialog(Activity_Main.this);
+                            dialog = new SpotsDialog(Activity_Main_Not_Used.this);
                             dialog.show();
-                            queue = Volley.newRequestQueue(Activity_Main.this);
+                            queue = Volley.newRequestQueue(Activity_Main_Not_Used.this);
                             Function_Logout();
 
                         }catch (Exception e){
@@ -618,20 +629,8 @@ public class Activity_Main extends AppCompatActivity {
 
     public void Function_Verify_Network_Available(Context context){
         try{
-            if (!IsNetworkAvailable(context)){
-
-                new AlertDialog.Builder(context)
-                        .setTitle("No Internet Connection")
-                        .setMessage("Internet Connection is Not Available.")
-                        .setCancelable(false)
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                finishAffinity();
-
-                            }
-                        }).show();
+            if (!utility.IsNetworkAvailable(this)){
+                utility.Function_Show_Not_Network_Message(this);
             };
         }catch (Exception e){
             System.out.println("### Exception e "+e.getLocalizedMessage());
@@ -641,30 +640,6 @@ public class Activity_Main extends AppCompatActivity {
     @Override
     public void onBackPressed() {
 
-        if (drawer.isDrawerOpen(GravityCompat.START)) {
-
-            drawer.closeDrawers();
-            return;
-
-        }
-
-        // This code loads home fragment when back key is pressed
-        // when user is in other fragment than home
-        if (shouldLoadHomeFragOnBackPress) {
-
-            // checking if user is on other navigation menu
-            // rather than home
-            if (navItemIndex != 0) {
-
-                navItemIndex = 0;
-                TAG_CURRENT = TAG_ATTENDANCE;
-                loadHomeFragment();
-                return;
-
-            }
-        }
-
-
         if (back_pressed + 2000 > System.currentTimeMillis()) {
 
             this.moveTaskToBack(true);
@@ -673,7 +648,9 @@ public class Activity_Main extends AppCompatActivity {
             Toast.makeText(getBaseContext(), "Press Once Again To Exit.", Toast.LENGTH_SHORT).show();
 
         }
+
         back_pressed = System.currentTimeMillis();
+
     }
 
 }

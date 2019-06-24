@@ -22,10 +22,12 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 import com.banyan.androidiws.R;
 import com.banyan.androidiws.global.AppConfig;
 import com.banyan.androidiws.global.Constants;
 import com.banyan.androidiws.global.Session_Manager;
+import com.banyan.androidiws.global.Util;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import org.json.JSONException;
@@ -37,13 +39,11 @@ import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
 
-import static com.banyan.androidiws.global.Util.IsNetworkAvailable;
-
 public class Activity_Login extends AppCompatActivity {
 
     public static final String TAG_FORGOT_PASSWORD_USERNAME = "username";
 
-    public static final String TAG_LOGIN_USERNAME = "user_name";
+    public static final String TAG_LOGIN_USERNAME = "username";
     public static final String TAG_LOGIN_PASSWORD = "password";
 
     public static final String TAG_LOGIN_USER_ID = "user_id";
@@ -51,36 +51,49 @@ public class Activity_Login extends AppCompatActivity {
     public static final String TAG_LOGIN_USER_ROLE = "user_role";
     public static final String TAG_LOGIN_USER_TYPE = "user_type";
     public static final String TAG_LOGIN_DEPARTMENT_ID = "department_id";
+    public static final String TAG_LOGIN_PROFILE_ID = "profile_id";
     public static final String TAG_LOGIN_PROFILE_IMAGE = "profile_photo";
     public static final String TAG_LOGIN_FIRST_NAME = "fname";
     public static final String TAG_LOGIN_LAST_NAME = "lname";
 
     private EditText edit_username, edit_password;
-    private TextView text_forgot_password;
-    private Button button_login;
-    private long back_pressed;
 
-    SpotsDialog dialog;
+    private Button button_login;
+
+    private SpotsDialog dialog;
 
     private RequestQueue queue;
 
-    private String str_username = "", str_password = "";
-    private String str_forgot_password_username = "";
-
     private Session_Manager session_manager;
+
     private LinearLayout layout_root;
+
+    private Util utility;
+
+    private String str_username = "", str_password = "", str_forgot_password_username = "";
+
+    private long back_pressed;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity__login);
 
+        /*********************************
+         *  SETUP
+         **********************************/
+        utility = new Util();
+
+
+        /*********************************
+        *  FIND VIEW BY ID
+        **********************************/
         Function_Verify_Network_Available(this);
 
         session_manager = new Session_Manager(getApplicationContext());
         Boolean isLogin = session_manager.isLoggedIn();
         if (isLogin){
-            Intent intent = new Intent(Activity_Login.this, Activity_Main.class);
+            Intent intent = new Intent(Activity_Login.this, MainActivity.class);
             startActivity(intent);
 
             finish();
@@ -89,36 +102,29 @@ public class Activity_Login extends AppCompatActivity {
         layout_root = (LinearLayout)findViewById(R.id.layout_root);
         edit_username = (EditText)findViewById(R.id.edit_email);
         edit_password = (EditText)findViewById(R.id.edit_password);
-        text_forgot_password = (TextView)findViewById(R.id.text_forgot_password);
         button_login = (Button)findViewById(R.id.button_login);
+
+        /*********************************
+         *  SESSION
+         **********************************/
 
         session_manager = new Session_Manager(this);
 
 
-        text_forgot_password.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                AlertForgetPassword();
-            }
-        });
+        /*********************************
+         *  ACTION
+         **********************************/
 
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
 
-
-                session_manager.createLoginSession("2", "guru@banyaninfotech.com", "3", "Employee",
-                        "4", "http://epictech.in/iwsone/uploads/Employee/EMP1015/2018-11-28_14-45-36-user.jpg",
-                        "Resource");
-                TastyToast.makeText(Activity_Login.this, "Login Successfully.", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
-
-                Intent intent = new Intent(Activity_Login.this, Activity_Main.class);
-                startActivity(intent);
-
-                /*str_username = edit_username.getText().toString().trim();
+                str_username = edit_username.getText().toString().trim();
                 str_password = edit_password.getText().toString().trim();
 
-                if (str_username.isEmpty()) {
+                if (!utility.IsNetworkAvailable(Activity_Login.this)){
+                    utility.Function_Show_Not_Network_Message(Activity_Login.this);
+                }else if (str_username.isEmpty()) {
                     TastyToast.makeText(Activity_Login.this, "Enter User Name ", TastyToast.LENGTH_SHORT, TastyToast.WARNING);
                 }else if (str_password.isEmpty()) {
                     TastyToast.makeText(Activity_Login.this, "Enter Password ", TastyToast.LENGTH_SHORT, TastyToast.WARNING);
@@ -130,60 +136,12 @@ public class Activity_Login extends AppCompatActivity {
                     queue = Volley.newRequestQueue(Activity_Login.this);
                     Function_Login();
 
-                }*/
+                }
 
             }
         });
 
     }
-
-    public void AlertForgetPassword() {
-
-        LayoutInflater layoutInflater = LayoutInflater.from(Activity_Login.this);
-        View view_alert = layoutInflater.inflate(R.layout.alert_forget_password, null);
-
-        final EditText edit_username = (EditText) view_alert.findViewById(R.id.edit_email);
-
-        AlertDialog.Builder alertdialog_builder = new AlertDialog.Builder(Activity_Login.this);
-        alertdialog_builder.setCancelable(false);
-        alertdialog_builder.setView(view_alert);
-        alertdialog_builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-
-
-                TastyToast.makeText(Activity_Login.this, "Password Reseted Successfully", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
-
-
-/*                str_forgot_password_username = edit_username.getText().toString();
-
-                if (str_forgot_password_username.isEmpty()){
-                    TastyToast.makeText(Activity_Login.this, "Enter User Name", TastyToast.LENGTH_SHORT, TastyToast.WARNING);
-                }else{
-
-                    dialog = new SpotsDialog(Activity_Login.this);
-                    dialog.show();
-
-                    queue = Volley.newRequestQueue(Activity_Login.this);
-                    Function_Forgot_Password();
-
-                }*/
-            }
-        });
-        alertdialog_builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-            @Override
-            public void onClick(DialogInterface dialogInterface, int i) {
-                dialogInterface.dismiss();
-            }
-        });
-
-        AlertDialog alertDialog = alertdialog_builder.create();
-        alertDialog.setTitle("Forgot Password");
-        alertDialog.show();
-
-    }
-
-
 
     /********************************
      *FUNCTION FORGOT PASSWORD
@@ -299,21 +257,20 @@ public class Activity_Login extends AppCompatActivity {
                         JSONObject obj_one = obj.getJSONObject("records");
 
                         String str_user_id = obj_one.getString(TAG_LOGIN_USER_ID);
-                        String str_user_name = obj_one.getString(TAG_LOGIN_USERNAME);
+                        String str_user_name = obj_one.getString(TAG_LOGIN_USER_NAME);
                         String str_user_role = obj_one.getString(TAG_LOGIN_USER_ROLE);
                         String str_user_type = obj_one.getString(TAG_LOGIN_USER_TYPE);
                         String str_user_department_id = obj_one.getString(TAG_LOGIN_DEPARTMENT_ID);
-                        String str_user_image = obj_one.getString(TAG_LOGIN_PROFILE_IMAGE);
-                        String str_first_name = obj_one.getString(TAG_LOGIN_FIRST_NAME);
-                        String str_last_name = obj_one.getString(TAG_LOGIN_LAST_NAME);
-                        String str_name_first_last = str_first_name+" "+str_last_name;
+                        String str_user_profile_id = obj_one.getString(TAG_LOGIN_PROFILE_ID);
+
 
                         System.out.println("USER_DETAILS :"+str_user_id+" "+str_user_type+" "+str_user_department_id);
-                        session_manager.createLoginSession(str_user_id, str_user_name, str_user_type, str_user_role, str_user_department_id, str_user_image, str_name_first_last);
+                        session_manager.createLoginSession(str_user_id, str_user_name, str_user_type, str_user_role, str_user_department_id, str_user_profile_id);
                         TastyToast.makeText(Activity_Login.this, "Login Successfully.", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
 
-                        Intent intent = new Intent(Activity_Login.this, Activity_Main.class);
+                        Intent intent = new Intent(Activity_Login.this, MainActivity.class);
                         startActivity(intent);
+                        finish();
                         overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left); // open new acitivity
                         dialog.dismiss();
 
@@ -385,20 +342,8 @@ public class Activity_Login extends AppCompatActivity {
 
     public void Function_Verify_Network_Available(Context context){
         try{
-            if (!IsNetworkAvailable(context)){
-
-                new AlertDialog.Builder(context)
-                        .setTitle("No Internet Connection")
-                        .setMessage("Internet Connection is Not Available.")
-                        .setCancelable(false)
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                finishAffinity();
-
-                            }
-                        }).show();
+            if (!utility.IsNetworkAvailable(this)){
+                utility.Function_Show_Not_Network_Message(this);
             };
         }catch (Exception e){
             System.out.println("### Exception e "+e.getLocalizedMessage());
@@ -417,6 +362,7 @@ public class Activity_Login extends AppCompatActivity {
 
             Toast.makeText(getBaseContext(), "Press Once Again To Exit!", Toast.LENGTH_SHORT).show();
         }
+
         back_pressed = System.currentTimeMillis();
 
 

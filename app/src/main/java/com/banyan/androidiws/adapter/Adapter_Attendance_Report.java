@@ -8,7 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.banyan.androidiws.R;
-import com.banyan.androidiws.activity.Activity_Attendance_Report;
+import com.banyan.androidiws.activity.Activity_Attendance_Report_For_Dates;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
@@ -62,8 +62,8 @@ public class Adapter_Attendance_Report extends BaseAdapter {
         HashMap<String,String> result = new HashMap<>();
         result = data.get(i);
 
-        String str_leave_date = result.get(Activity_Attendance_Report.TAG_ATTENDANCE_DATE);
-        String str_leave_status = result.get(Activity_Attendance_Report.TAG_ATTENDANCE_STATUS);
+        String str_leave_date = result.get(Activity_Attendance_Report_For_Dates.TAG_ATTENDANCE_DATE);
+        String str_leave_status = result.get(Activity_Attendance_Report_For_Dates.TAG_ATTENDANCE_STATUS);
 
         System.out.println("### getView str_leave_date "+str_leave_date);
         SimpleDateFormat dateFormat = new SimpleDateFormat(

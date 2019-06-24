@@ -8,6 +8,7 @@
     android:background="@color/color_background"
     >
 
+<include layout="@layout/toolbar"></include>
 
     <TextView
         android:layout_width="match_parent"

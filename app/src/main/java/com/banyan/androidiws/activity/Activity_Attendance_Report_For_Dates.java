@@ -33,6 +33,7 @@ import com.banyan.androidiws.global.AppConfig;
 import com.banyan.androidiws.global.Constants;
 import com.banyan.androidiws.global.NestedListview;
 import com.banyan.androidiws.global.Session_Manager;
+import com.banyan.androidiws.global.Util;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import org.json.JSONArray;
@@ -50,10 +51,8 @@ import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
 
-import static com.banyan.androidiws.global.Util.IsNetworkAvailable;
 
-
-public class Activity_Attendance_Report extends AppCompatActivity {
+public class Activity_Attendance_Report_For_Dates extends AppCompatActivity {
 
     public static final String TAG_ATTENDANCE_USER_ID = "user_id";
     public static final String TAG_ATTENDANCE_FROM_DATE = "from_date";
@@ -87,6 +86,7 @@ public class Activity_Attendance_Report extends AppCompatActivity {
     private String str_selected_from_date, str_selected_to_date;
 
     private ImageView img_close;
+    private Util utility;
 
 
     @Override
@@ -94,6 +94,8 @@ public class Activity_Attendance_Report extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_attendance_report_for_dates);
         // Inflate the layout for this fragment
+
+        utility = new Util();
 
         Function_Verify_Network_Available(this);
 
@@ -127,6 +129,11 @@ public class Activity_Attendance_Report extends AppCompatActivity {
         cardview_report.setVisibility(View.GONE);
 
         //setup
+        /*********************************
+         *  SETUP
+         **********************************/
+
+
         arrayList_attendance = new ArrayList<>();
 
         //set data
@@ -144,7 +151,7 @@ public class Activity_Attendance_Report extends AppCompatActivity {
                     mMonth = c.get(Calendar.MONTH);
                     mDay = c.get(Calendar.DAY_OF_MONTH);
 
-                    DatePickerDialog datePickerDialog = new DatePickerDialog(Activity_Attendance_Report.this,
+                    DatePickerDialog datePickerDialog = new DatePickerDialog(Activity_Attendance_Report_For_Dates.this,
                             new DatePickerDialog.OnDateSetListener() {
 
                                 @Override
@@ -187,7 +194,7 @@ public class Activity_Attendance_Report extends AppCompatActivity {
 
                     if (str_start_date.isEmpty()){
 
-                        TastyToast.makeText(Activity_Attendance_Report.this, "Select From Date First.", TastyToast.LENGTH_SHORT, TastyToast.INFO);
+                        TastyToast.makeText(Activity_Attendance_Report_For_Dates.this, "Select From Date First.", TastyToast.LENGTH_SHORT, TastyToast.INFO);
                         
                     }else{
 
@@ -208,7 +215,7 @@ public class Activity_Attendance_Report extends AppCompatActivity {
                             mMonth = c.get(Calendar.MONTH);
                             mDay = c.get(Calendar.DAY_OF_MONTH);
 
-                            DatePickerDialog datePickerDialog = new DatePickerDialog(Activity_Attendance_Report.this,
+                            DatePickerDialog datePickerDialog = new DatePickerDialog(Activity_Attendance_Report_For_Dates.this,
                                     new DatePickerDialog.OnDateSetListener() {
 
                                         @Override
@@ -255,13 +262,8 @@ public class Activity_Attendance_Report extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(Activity_Attendance_Report.this);
-                SharedPreferences.Editor editor = sharedPreferences.edit();
 
-                editor.putString(Activity_Main.TAG_CALLING_ACTIVITY, Activity_Main.TAG_ACTIVITY_ATTEDANCE_REPORT);
-                editor.commit();
-
-                Intent intent = new Intent(Activity_Attendance_Report.this, Activity_Main.class);
+                Intent intent = new Intent(Activity_Attendance_Report_For_Dates.this, MainActivity.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);  // close activity
 
@@ -287,29 +289,29 @@ public class Activity_Attendance_Report extends AppCompatActivity {
 
                 arrayList_attendance.add(map2);
 
-                Adapter_Attendance_Report adapter_attendance_report = new Adapter_Attendance_Report(Activity_Attendance_Report.this, arrayList_attendance);
+                Adapter_Attendance_Report adapter_attendance_report = new Adapter_Attendance_Report(Activity_Attendance_Report_For_Dates.this, arrayList_attendance);
                 list_view_attendance_report.setAdapter(adapter_attendance_report);
 
 /*                String str_from_date = edit_from_date.getText().toString();
                 String str_to_date = edit_to_date.getText().toString();
                 
                 if (str_from_date.isEmpty()){
-                    TastyToast.makeText(Activity_Attendance_Report.this, "Select From Date", TastyToast.LENGTH_SHORT, TastyToast.WARNING);
+                    TastyToast.makeText(Activity_Attendance_Report_For_Dates.this, "Select From Date", TastyToast.LENGTH_SHORT, TastyToast.WARNING);
                 }else if (str_to_date.isEmpty()){
-                    TastyToast.makeText(Activity_Attendance_Report.this, "Select To Date", TastyToast.LENGTH_SHORT, TastyToast.WARNING);
+                    TastyToast.makeText(Activity_Attendance_Report_For_Dates.this, "Select To Date", TastyToast.LENGTH_SHORT, TastyToast.WARNING);
                 }else{
 
                     try{
 
                         cardview_report.setVisibility(View.GONE);
                         arrayList_attendance.clear();
-                        Adapter_Attendance_Report adapter_attendance_report = new Adapter_Attendance_Report(Activity_Attendance_Report.this, arrayList_attendance);
+                        Adapter_Attendance_Report adapter_attendance_report = new Adapter_Attendance_Report(Activity_Attendance_Report_For_Dates.this, arrayList_attendance);
                         list_view_attendance_report.setAdapter(adapter_attendance_report);
 
-                        dialog = new SpotsDialog(Activity_Attendance_Report.this);
+                        dialog = new SpotsDialog(Activity_Attendance_Report_For_Dates.this);
                         dialog.show();
 
-                        queue = Volley.newRequestQueue(Activity_Attendance_Report.this);
+                        queue = Volley.newRequestQueue(Activity_Attendance_Report_For_Dates.this);
                         Function_Get_Attendance_Report();
 
                     }catch (Exception e){
@@ -385,18 +387,18 @@ public class Activity_Attendance_Report extends AppCompatActivity {
                         arrayList_attendance.clear();
 
                         dialog.dismiss();
-                        TastyToast.makeText(Activity_Attendance_Report.this, msg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        TastyToast.makeText(Activity_Attendance_Report_For_Dates.this, msg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
 
                     } else if (status == 404) {
 
                         arrayList_attendance.clear();
 
                         dialog.dismiss();
-                        TastyToast.makeText(Activity_Attendance_Report.this, msg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        TastyToast.makeText(Activity_Attendance_Report_For_Dates.this, msg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
 
                     }
 
-                    Adapter_Attendance_Report adapter_attendance_report = new Adapter_Attendance_Report(Activity_Attendance_Report.this, arrayList_attendance);
+                    Adapter_Attendance_Report adapter_attendance_report = new Adapter_Attendance_Report(Activity_Attendance_Report_For_Dates.this, arrayList_attendance);
                     list_view_attendance_report.setAdapter(adapter_attendance_report);
 
                     dialog.dismiss();
@@ -414,7 +416,7 @@ public class Activity_Attendance_Report extends AppCompatActivity {
 
                 dialog.dismiss();
 
-                new AlertDialog.Builder(Activity_Attendance_Report.this)
+                new AlertDialog.Builder(Activity_Attendance_Report_For_Dates.this)
                         .setTitle(R.string.app_name)
                         .setMessage("Something Went Wrong, Try Again")
                         .setCancelable(false)
@@ -471,23 +473,12 @@ public class Activity_Attendance_Report extends AppCompatActivity {
 
     public void Function_Verify_Network_Available(Context context){
         try{
-            if (!IsNetworkAvailable(context)){
-
-                new AlertDialog.Builder(context)
-                        .setTitle("No Internet Connection")
-                        .setMessage("Internet Connection is Not Available.")
-                        .setCancelable(false)
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                finishAffinity();
-
-                            }
-                        }).show();
+            if (!utility.IsNetworkAvailable(this)){
+                utility.Function_Show_Not_Network_Message(this);
             };
         }catch (Exception e){
             System.out.println("### Exception e "+e.getLocalizedMessage());
         }
     }
+
 }

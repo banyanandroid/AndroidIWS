@@ -39,6 +39,7 @@ import com.banyan.androidiws.R;
 import com.banyan.androidiws.global.AppConfig;
 import com.banyan.androidiws.global.Constants;
 import com.banyan.androidiws.global.Session_Manager;
+import com.banyan.androidiws.global.Util;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -63,7 +64,6 @@ import java.util.Map;
 import dmax.dialog.SpotsDialog;
 
 import static android.content.Context.LOCATION_SERVICE;
-import static com.banyan.androidiws.global.Util.IsNetworkAvailable;
 import static com.google.android.gms.location.LocationServices.getFusedLocationProviderClient;
 
 
@@ -97,6 +97,8 @@ public class Fragment_Attendance extends Fragment {
 
     private LocationRequest mLocationRequest;
 
+    private Util utility;
+
     private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
     private long FASTEST_INTERVAL = 2000; /* 2 sec */
 
@@ -110,6 +112,11 @@ public class Fragment_Attendance extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View root_view = inflater.inflate(R.layout.fragment_attendance, container, false);
+
+        /*********************************
+         * SETUP
+         **********************************/
+        utility = new Util();
 
         System.out.println("### onCreateView ");
         // check is network available or not
@@ -159,6 +166,8 @@ public class Fragment_Attendance extends Fragment {
         text_attendance_remarks = (TextView)root_view.findViewById(R.id.text_attendance_remarks);
         layout_present = (LinearLayout)root_view.findViewById(R.id.layout_present);
 
+
+
         //get data
         Date currentTime = Calendar.getInstance().getTime();
         String format_date = new SimpleDateFormat("d, MMM, yyyy").format(currentTime.getTime());
@@ -168,6 +177,7 @@ public class Fragment_Attendance extends Fragment {
         text_time.setText(format_time);
 
         //get data
+
 
       /*  try{
 
@@ -587,25 +597,14 @@ public class Fragment_Attendance extends Fragment {
 
     public void Function_Verify_Network_Available(Context context){
         try{
-            if (!IsNetworkAvailable(context)){
-
-                new AlertDialog.Builder(context)
-                        .setTitle("No Internet Connection")
-                        .setMessage("Internet Connection is Not Available.")
-                        .setCancelable(false)
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                getActivity().finishAffinity();
-
-                            }
-                        }).show();
+            if (!utility.IsNetworkAvailable(getActivity())){
+                utility.Function_Show_Not_Network_Message(getActivity());
             };
         }catch (Exception e){
             System.out.println("### Exception e "+e.getLocalizedMessage());
         }
     }
+
 
 
 

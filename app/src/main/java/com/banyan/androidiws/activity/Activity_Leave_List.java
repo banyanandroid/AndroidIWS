@@ -1,4 +1,4 @@
-package com.banyan.androidiws.fragment;
+package com.banyan.androidiws.activity;
 
 
 import android.content.Context;
@@ -9,6 +9,8 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
@@ -17,6 +19,8 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -36,6 +40,7 @@ import com.banyan.androidiws.global.AppConfig;
 import com.banyan.androidiws.global.Constants;
 import com.banyan.androidiws.global.ItemOffSetDecorator;
 import com.banyan.androidiws.global.Session_Manager;
+import com.banyan.androidiws.global.Util;
 import com.sdsmdg.tastytoast.TastyToast;
 import com.toptoche.searchablespinnerlibrary.SearchableSpinner;
 
@@ -50,10 +55,8 @@ import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
 
-import static com.banyan.androidiws.global.Util.IsNetworkAvailable;
 
-
-public class Fragment_Leave_List extends Fragment {
+public class Activity_Leave_List extends AppCompatActivity {
 
     public static final String TAG_LEAVE_BALANCE_TITLE = "leavename";
     public static final String TAG_LEAVE_BALANCE_BALANCE = "balance_leave";
@@ -71,30 +74,44 @@ public class Fragment_Leave_List extends Fragment {
     public static final String TAG_USER_ID = "user_id";
     public static final String TAG_FILTER_STATUS = "status";
 
-    private TextView text_filter;
-    LinearLayout filter;
-    private ListView list_view_leave_request;
-    private RecyclerView recycler_view_leave_balance;
-    private SpotsDialog dialog;
-    private RequestQueue queue;
-    private Session_Manager session;
-
-    private String str_user_id = "", str_user_name = "";
-    private int int_selected_filter_id = 0;
-
-    ArrayList<HashMap<String, String>> arrayList_leave_details, arrayList_leave_request;
     private SwipeRefreshLayout swipe_refresh_list, swipe_refresh_message;
+
     private TextView text_message;
 
+    private Toolbar toolbar;
+
+    private TextView text_filter;
+
+    private LinearLayout filter;
+
+    private ListView list_view_leave_request;
+
+    private RecyclerView recycler_view_leave_balance;
+
+    private SpotsDialog dialog;
+
+    private RequestQueue queue;
+
+    private Session_Manager session;
+
+    private Util utility;
+
+    private String str_user_id = "", str_user_name = "";
+
+    private int int_selected_filter_id = 0;
+
+    private ArrayList<HashMap<String, String>> arrayList_leave_details, arrayList_leave_request;
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        View root_view = inflater.inflate(R.layout.fragment_leave_details, container, false);
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.fragment_leave_details);
 
-        Function_Verify_Network_Available(getActivity());
+        utility = new Util();
 
-        session = new Session_Manager(getActivity());
+        Function_Verify_Network_Available( Activity_Leave_List.this);
+
+        session = new Session_Manager( Activity_Leave_List.this);
         session.checkLogin();
 
         HashMap<String, String> user = session.getUserDetails();
@@ -105,13 +122,33 @@ public class Fragment_Leave_List extends Fragment {
         System.out.println("### str_user_id " + str_user_id);
         System.out.println("### str_user_name " + str_user_name);
 
-        recycler_view_leave_balance = (RecyclerView) root_view.findViewById(R.id.recycler_view_leave_balance);
-        filter =(LinearLayout) root_view.findViewById(R.id.filter);
-        text_filter = (TextView) root_view.findViewById(R.id.text_filter);
-        list_view_leave_request = (ListView) root_view.findViewById(R.id.list_view_leave_request);
-        text_message = (TextView) root_view.findViewById(R.id.text_message);
+        /*************************
+         *  FIND VIEW BY ID
+         *************************/
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Leave Tracker");
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        recycler_view_leave_balance = (RecyclerView)  findViewById(R.id.recycler_view_leave_balance);
+        filter =(LinearLayout)  findViewById(R.id.filter);
+        text_filter = (TextView)  findViewById(R.id.text_filter);
+        list_view_leave_request = (ListView)  findViewById(R.id.list_view_leave_request);
+        text_message = (TextView)  findViewById(R.id.text_message);
 
         //setup
+
+        /*********************************
+         * SETUP
+         **********************************/
+
 
         arrayList_leave_details = new ArrayList<>();
         arrayList_leave_request = new ArrayList<>();
@@ -132,12 +169,12 @@ public class Fragment_Leave_List extends Fragment {
 
         arrayList_leave_details.add(map2);
 
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( Activity_Leave_List.this, LinearLayoutManager.HORIZONTAL, false);
         recycler_view_leave_balance.setLayoutManager(layoutManager);
-        ItemOffSetDecorator itemDecoration = new ItemOffSetDecorator(getActivity(), R.dimen.dimen_horizontal);
+        ItemOffSetDecorator itemDecoration = new ItemOffSetDecorator( Activity_Leave_List.this, R.dimen.dimen_horizontal);
         recycler_view_leave_balance.addItemDecoration(itemDecoration);
 
-        Adapter_Leave_balance_List adapter_leave_details_list = new Adapter_Leave_balance_List(getActivity(), arrayList_leave_details);
+        Adapter_Leave_balance_List adapter_leave_details_list = new Adapter_Leave_balance_List( Activity_Leave_List.this, arrayList_leave_details);
         recycler_view_leave_balance.setAdapter(adapter_leave_details_list);
 
         HashMap<String, String> map_leave = new HashMap<>();
@@ -166,16 +203,16 @@ public class Fragment_Leave_List extends Fragment {
         arrayList_leave_request.add(map_leave2);
 
 
-        Adapter_Leave_Request_List adapter_leave_request_list = new Adapter_Leave_Request_List(getActivity(), arrayList_leave_request);
+        Adapter_Leave_Request_List adapter_leave_request_list = new Adapter_Leave_Request_List( Activity_Leave_List.this, arrayList_leave_request);
         list_view_leave_request.setAdapter(adapter_leave_request_list);
 
 
       /*  try {
 
-            dialog = new SpotsDialog(getActivity());
+            dialog = new SpotsDialog( Activity_Leave_List.this);
             dialog.show();
 
-            queue = Volley.newRequestQueue(getActivity());
+            queue = Volley.newRequestQueue( Activity_Leave_List.this);
             Function_Leave_Balance_Request();
 
         } catch (Exception e) {
@@ -216,7 +253,7 @@ public class Fragment_Leave_List extends Fragment {
 
                 System.out.println("### setOnItemClickListener str_request_type "+str_request_type);
 
-                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+                SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences( Activity_Leave_List.this);
                 SharedPreferences.Editor editor = sharedPreferences.edit();
                 editor.putString(Activity_Leave_Details.TAG_LEAVE_FROM_DATE, str_request_from_date);
                 editor.putString(Activity_Leave_Details.TAG_LEAVE_TO_DATE, str_request_end_date);
@@ -228,13 +265,34 @@ public class Fragment_Leave_List extends Fragment {
                 editor.putString(Activity_Leave_Details.TAG_LEAVE_STATUS, str_request_status);
                 editor.commit();
 
-                Intent intent = new Intent(getActivity(), Activity_Leave_Details.class);
+                Intent intent = new Intent( Activity_Leave_List.this, Activity_Leave_Details.class);
                 startActivity(intent);
-                getActivity().overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
+                 Activity_Leave_List.this.overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left);
 
             }
         });
-        return root_view;
+
+
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_apply_leave, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.action_add_leave){
+
+            Intent intent = new Intent(Activity_Leave_List.this, Activity_Add_Leave.class);
+            startActivity(intent);
+
+            return  true;
+        }
+
+        return false;
     }
 
     /********************************
@@ -325,7 +383,7 @@ public class Fragment_Leave_List extends Fragment {
                         text_message.setVisibility(View.VISIBLE);
 
                         dialog.dismiss();
-                        TastyToast.makeText(getContext(), "Bad Request, Try Again.", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        TastyToast.makeText( Activity_Leave_List.this, "Bad Request, Try Again.", TastyToast.LENGTH_LONG, TastyToast.ERROR);
 
                     } else if (status == 404) {
 
@@ -336,19 +394,19 @@ public class Fragment_Leave_List extends Fragment {
                         text_message.setVisibility(View.VISIBLE);
 
                         dialog.dismiss();
-                        TastyToast.makeText(getContext(), "Oops! Something Went Wrong, Try Again", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        TastyToast.makeText( Activity_Leave_List.this, "Oops! Something Went Wrong, Try Again", TastyToast.LENGTH_LONG, TastyToast.ERROR);
 
                     }
 
-                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(getActivity(), LinearLayoutManager.HORIZONTAL, false);
+                    RecyclerView.LayoutManager layoutManager = new LinearLayoutManager( Activity_Leave_List.this, LinearLayoutManager.HORIZONTAL, false);
                     recycler_view_leave_balance.setLayoutManager(layoutManager);
-                    ItemOffSetDecorator itemDecoration = new ItemOffSetDecorator(getActivity(), R.dimen.dimen_horizontal);
+                    ItemOffSetDecorator itemDecoration = new ItemOffSetDecorator( Activity_Leave_List.this, R.dimen.dimen_horizontal);
                     recycler_view_leave_balance.addItemDecoration(itemDecoration);
 
-                    Adapter_Leave_balance_List adapter_leave_details_list = new Adapter_Leave_balance_List(getActivity(), arrayList_leave_details);
+                    Adapter_Leave_balance_List adapter_leave_details_list = new Adapter_Leave_balance_List( Activity_Leave_List.this, arrayList_leave_details);
                     recycler_view_leave_balance.setAdapter(adapter_leave_details_list);
 
-                    Adapter_Leave_Request_List adapter_leave_request_list = new Adapter_Leave_Request_List(getActivity(), arrayList_leave_request);
+                    Adapter_Leave_Request_List adapter_leave_request_list = new Adapter_Leave_Request_List( Activity_Leave_List.this, arrayList_leave_request);
                     list_view_leave_request.setAdapter(adapter_leave_request_list);
 
                     dialog.dismiss();
@@ -365,7 +423,7 @@ public class Fragment_Leave_List extends Fragment {
 
                 dialog.dismiss();
 
-                TastyToast.makeText(getContext(), "Something Went Wrong, Try Again Later", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                TastyToast.makeText( Activity_Leave_List.this, "Something Went Wrong, Try Again Later", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
 
                 System.out.println("### AppConfig.URL_LEAVE_BALANCE onErrorResponse");
                 if (error != null)
@@ -409,7 +467,7 @@ public class Fragment_Leave_List extends Fragment {
 
     public void Alert_Leave_Filter() {
 
-        LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+        LayoutInflater layoutInflater = LayoutInflater.from( Activity_Leave_List.this);
         View view_alert = layoutInflater.inflate(R.layout.alert_leave_filter, null);
 
         final SearchableSpinner search_spinner_leave_filter = (SearchableSpinner) view_alert.findViewById(R.id.search_spinner_leave_filter);
@@ -428,7 +486,7 @@ public class Fragment_Leave_List extends Fragment {
             }
         });
 
-        AlertDialog.Builder alertdialog_builder = new AlertDialog.Builder(getActivity());
+        AlertDialog.Builder alertdialog_builder = new AlertDialog.Builder( Activity_Leave_List.this);
         alertdialog_builder.setCancelable(false);
         alertdialog_builder.setView(view_alert);
         alertdialog_builder.setPositiveButton("Submit", new DialogInterface.OnClickListener() {
@@ -438,13 +496,13 @@ public class Fragment_Leave_List extends Fragment {
                /* //get data
                 try {
                     arrayList_leave_request.clear();
-                    Adapter_Leave_Request_List adapter_leave_request_list = new Adapter_Leave_Request_List(getActivity(), arrayList_leave_request);
+                    Adapter_Leave_Request_List adapter_leave_request_list = new Adapter_Leave_Request_List( Activity_Leave_List.this, arrayList_leave_request);
                     list_view_leave_request.setAdapter(adapter_leave_request_list);
 
-                    dialog = new SpotsDialog(getActivity());
+                    dialog = new SpotsDialog( Activity_Leave_List.this);
                     dialog.show();
 
-                    queue = Volley.newRequestQueue(getActivity());
+                    queue = Volley.newRequestQueue( Activity_Leave_List.this);
                     Function_Leave_Balance();
 
                 } catch (Exception e) {
@@ -485,7 +543,6 @@ public class Fragment_Leave_List extends Fragment {
                     int status = obj.getInt("status");
 
                     if (status == 200) {
-
 
                         JSONArray array_request = obj.getJSONArray("records");
 
@@ -537,7 +594,7 @@ public class Fragment_Leave_List extends Fragment {
                         text_message.setVisibility(View.VISIBLE);
 
                         dialog.dismiss();
-                        TastyToast.makeText(getContext(), "Bad Request, Try Again.", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        TastyToast.makeText( Activity_Leave_List.this, "Bad Request, Try Again.", TastyToast.LENGTH_LONG, TastyToast.ERROR);
 
                     } else if (status == 404) {
 
@@ -547,11 +604,11 @@ public class Fragment_Leave_List extends Fragment {
                         text_message.setVisibility(View.VISIBLE);
 
                         dialog.dismiss();
-                        TastyToast.makeText(getContext(), "Oops! Something Went Wrong, Try Again", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        TastyToast.makeText( Activity_Leave_List.this, "Oops! Something Went Wrong, Try Again", TastyToast.LENGTH_LONG, TastyToast.ERROR);
 
                     }
 
-                    Adapter_Leave_Request_List adapter_leave_request_list = new Adapter_Leave_Request_List(getActivity(), arrayList_leave_request);
+                    Adapter_Leave_Request_List adapter_leave_request_list = new Adapter_Leave_Request_List( Activity_Leave_List.this, arrayList_leave_request);
                     list_view_leave_request.setAdapter(adapter_leave_request_list);
 
                     dialog.dismiss();
@@ -573,7 +630,7 @@ public class Fragment_Leave_List extends Fragment {
                 if (error != null)
                     System.out.println("### AppConfig.URL_LEAVE_FILTER onErrorResponse " + error.getLocalizedMessage());
 
-                new AlertDialog.Builder(getContext())
+                new AlertDialog.Builder( Activity_Leave_List.this)
                         .setTitle(R.string.app_name)
                         .setMessage("Something Went Wrong, Try Again Later.")
                         .setCancelable(false)
@@ -581,7 +638,7 @@ public class Fragment_Leave_List extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
-                                getActivity().finishAffinity();
+                                 Activity_Leave_List.this.finishAffinity();
 
                             }
                         }).show();
@@ -622,26 +679,13 @@ public class Fragment_Leave_List extends Fragment {
         queue.add(request);
     }
 
-    public void Function_Verify_Network_Available(Context context) {
-        try {
-            if (!IsNetworkAvailable(context)) {
-
-                new AlertDialog.Builder(context)
-                        .setTitle("No Internet Connection")
-                        .setMessage("Internet Connection is Not Available.")
-                        .setCancelable(false)
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                getActivity().finishAffinity();
-
-                            }
-                        }).show();
-            }
-            ;
-        } catch (Exception e) {
-            System.out.println("### Exception e " + e.getLocalizedMessage());
+    public void Function_Verify_Network_Available(Context context){
+        try{
+            if (!utility.IsNetworkAvailable(this)){
+                utility.Function_Show_Not_Network_Message(this);
+            };
+        }catch (Exception e){
+            System.out.println("### Exception e "+e.getLocalizedMessage());
         }
     }
 

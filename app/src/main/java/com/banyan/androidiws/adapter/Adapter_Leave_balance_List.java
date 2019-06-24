@@ -11,7 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.banyan.androidiws.R;
-import com.banyan.androidiws.fragment.Fragment_Leave_List;
+import com.banyan.androidiws.activity.Activity_Leave_List;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -43,9 +43,9 @@ public class Adapter_Leave_balance_List extends RecyclerView.Adapter<Adapter_Lea
                 HashMap<String, String> result = data.get(position);
         result = data.get(position);
 
-        String str_leave_title = result.get(Fragment_Leave_List.TAG_LEAVE_BALANCE_TITLE);
-        String str_leave_balance = result.get(Fragment_Leave_List.TAG_LEAVE_BALANCE_BALANCE);
-        String str_leave_total = result.get(Fragment_Leave_List.TAG_LEAVE_BALANCE_TOTAL);
+        String str_leave_title = result.get(Activity_Leave_List.TAG_LEAVE_BALANCE_TITLE);
+        String str_leave_balance = result.get(Activity_Leave_List.TAG_LEAVE_BALANCE_BALANCE);
+        String str_leave_total = result.get(Activity_Leave_List.TAG_LEAVE_BALANCE_TOTAL);
 
         viewHolder.text_leave_balance.setText(str_leave_balance);
         viewHolder.text_title.setText(str_leave_title);

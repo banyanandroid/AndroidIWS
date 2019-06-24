@@ -1,18 +1,20 @@
-package com.banyan.androidiws.fragment;
+package com.banyan.androidiws.activity;
 
 
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
-import androidx.fragment.app.Fragment;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -45,10 +47,8 @@ import sun.bob.mcalendarview.MarkStyle;
 import sun.bob.mcalendarview.views.ExpCalendarView;
 import sun.bob.mcalendarview.vo.DateData;
 
-import static com.banyan.androidiws.global.Util.IsNetworkAvailable;
 
-
-public class Fragment_Attendance_Report extends Fragment {
+public class Activity_Attendance_Report_For_Months extends AppCompatActivity {
 
     public static final String TAG_ATTENDANCE_USER_ID = "user_id";
     public static final String TAG_ATTENDANCE_FROM_DATE = "from_date";
@@ -60,6 +60,12 @@ public class Fragment_Attendance_Report extends Fragment {
     public static final String TAG_ATTENDANCE_STATUS = "attendance_status";
     public static final String TAG_ATTENDANCE_REMARKS = "remarks";
 
+    private Toolbar toolbar;
+
+    private ExpCalendarView calendar_exp;
+
+    private TextView text_month, text_year;
+
     private TextView text_present_days, text_bench_days, text_training_days, text_app_leave, text_lop_days, text_total_days;
 
     private CardView cardview_report;
@@ -68,29 +74,29 @@ public class Fragment_Attendance_Report extends Fragment {
     
     private SpotsDialog dialog;
 
-    ArrayList<HashMap<String, String>> arrayList_attendance;
+    private ArrayList<HashMap<String, String>> arrayList_attendance;
 
     private Session_Manager session;
+
+    private Util utility;
 
     private String str_user_id, str_user_type;
 
     private int mYear, mMonth, mDay;
 
-
-    private ExpCalendarView calendar_exp;
-
-    private TextView text_month, text_year;
-
-
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setContentView(R.layout.activity_attendance_report_for_month);
         // Inflate the layout for this fragment
-        View root_view = inflater.inflate(R.layout.fragment_attendance_report_for_month, container, false);
 
-        Function_Verify_Network_Available(getActivity());
+        /************************
+        *  SESSION
+        *************************/
+        utility = new Util();
+        Function_Verify_Network_Available(Activity_Attendance_Report_For_Months.this);
 
-        session = new Session_Manager(getContext());
+        session = new Session_Manager(Activity_Attendance_Report_For_Months.this);
         session.checkLogin();
 
         HashMap<String, String> user = session.getUserDetails();
@@ -101,20 +107,38 @@ public class Fragment_Attendance_Report extends Fragment {
         System.out.println("### str_user_id " + str_user_id);
         System.out.println("### str_user_type " + str_user_type);
 
-        text_month = (TextView) root_view.findViewById(R.id.text_month);
-        text_year = (TextView) root_view.findViewById(R.id.text_year);
-        cardview_report = (CardView) root_view.findViewById(R.id.cardview_report);
-        text_present_days = (TextView) root_view.findViewById(R.id.text_present_days);
-        text_bench_days = (TextView) root_view.findViewById(R.id.text_bench_days);
-        text_training_days = (TextView) root_view.findViewById(R.id.text_training_days);
-        text_app_leave = (TextView) root_view.findViewById(R.id.text_app_leave);
-        text_lop_days = (TextView) root_view.findViewById(R.id.text_lop_days);
-        text_total_days = (TextView) root_view.findViewById(R.id.text_total_days);
-        calendar_exp = (ExpCalendarView) root_view.findViewById(R.id.calendar_exp);
+        /************************
+         *  FIND VIEW BY ID
+         *************************/
+
+        toolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbar.setTitle("Attendance");
+        setSupportActionBar(toolbar);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onBackPressed();
+            }
+        });
+
+        text_month = (TextView)  findViewById(R.id.text_month);
+        text_year = (TextView)  findViewById(R.id.text_year);
+        cardview_report = (CardView)  findViewById(R.id.cardview_report);
+        text_present_days = (TextView)  findViewById(R.id.text_present_days);
+        text_bench_days = (TextView)  findViewById(R.id.text_bench_days);
+        text_training_days = (TextView)  findViewById(R.id.text_training_days);
+        text_app_leave = (TextView)  findViewById(R.id.text_app_leave);
+        text_lop_days = (TextView)  findViewById(R.id.text_lop_days);
+        text_total_days = (TextView)  findViewById(R.id.text_total_days);
+        calendar_exp = (ExpCalendarView)  findViewById(R.id.calendar_exp);
 
         cardview_report.setVisibility(View.VISIBLE);
 
-        //setup
+        /************************
+         *  SETUP
+         *************************/
+
         arrayList_attendance = new ArrayList<>();
 
 
@@ -158,10 +182,10 @@ public class Fragment_Attendance_Report extends Fragment {
         try {
 
 
-            dialog = new SpotsDialog(getContext());
+            dialog = new SpotsDialog(Activity_Attendance_Report_For_Months.this);
             dialog.show();
 
-            queue = Volley.newRequestQueue(getContext());
+            queue = Volley.newRequestQueue(Activity_Attendance_Report_For_Months.this);
             Function_Get_Attendance_Report_For_Month();
 
         } catch (Exception e) {
@@ -169,7 +193,26 @@ public class Fragment_Attendance_Report extends Fragment {
         }*/
 
 
-        return root_view;
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_attendance_report, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.action_attendance_report_for_days){
+
+            Intent intent = new Intent(Activity_Attendance_Report_For_Months.this, Activity_Attendance_Report_For_Dates.class);
+            startActivity(intent);
+
+            return true;
+        }
+
+        return false;
     }
 
     /********************************
@@ -255,14 +298,14 @@ public class Fragment_Attendance_Report extends Fragment {
                         arrayList_attendance.clear();
 
                         dialog.dismiss();
-                        TastyToast.makeText(getContext(), msg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        TastyToast.makeText(Activity_Attendance_Report_For_Months.this, msg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
 
                     } else if (status == 404) {
 
                         arrayList_attendance.clear();
 
                         dialog.dismiss();
-                        TastyToast.makeText(getContext(), msg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        TastyToast.makeText(Activity_Attendance_Report_For_Months.this, msg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
 
                     }
 
@@ -282,7 +325,7 @@ public class Fragment_Attendance_Report extends Fragment {
 
                 dialog.dismiss();
 
-                new AlertDialog.Builder(getContext())
+                new AlertDialog.Builder(Activity_Attendance_Report_For_Months.this)
                         .setTitle(R.string.app_name)
                         .setMessage("Something Went Wrong, Try Again")
                         .setCancelable(false)
@@ -290,7 +333,7 @@ public class Fragment_Attendance_Report extends Fragment {
                             @Override
                             public void onClick(DialogInterface dialogInterface, int i) {
 
-                                getActivity().finishAffinity();
+                                Activity_Attendance_Report_For_Months.this.finishAffinity();
 
                             }
                         }).show();
@@ -337,20 +380,8 @@ public class Fragment_Attendance_Report extends Fragment {
 
     public void Function_Verify_Network_Available(Context context){
         try{
-            if (!IsNetworkAvailable(context)){
-
-                new AlertDialog.Builder(context)
-                        .setTitle("No Internet Connection")
-                        .setMessage("Internet Connection is Not Available.")
-                        .setCancelable(false)
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                getActivity().finishAffinity();
-
-                            }
-                        }).show();
+            if (!utility.IsNetworkAvailable(context)){
+                utility.Function_Show_Not_Network_Message(Activity_Attendance_Report_For_Months.this);
             };
         }catch (Exception e){
             System.out.println("### Exception e "+e.getLocalizedMessage());
