@@ -36,10 +36,11 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.banyan.androidiws.R;
+import com.banyan.androidiws.activity.Activity_Project_NI_NPO_TK_Completed;
 import com.banyan.androidiws.global.AppConfig;
 import com.banyan.androidiws.global.Constants;
 import com.banyan.androidiws.global.Session_Manager;
-import com.banyan.androidiws.global.Util;
+import com.banyan.androidiws.global.Utility;
 import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationRequest;
 import com.google.android.gms.location.LocationResult;
@@ -91,13 +92,13 @@ public class Fragment_Attendance extends Fragment {
             str_current_date = "";
 
     // 6.0 Location & Call
-    static final Integer GPS_SETTINGS = 0x7;
-    static final Integer LOCATION = 0x1;
-    static final Integer CALL = 0x2;
+    final Integer GPS_SETTINGS = 0x7;
+    final Integer LOCATION = 0x1;
+    final Integer CALL = 0x2;
 
     private LocationRequest mLocationRequest;
 
-    private Util utility;
+    private Utility utility;
 
     private long UPDATE_INTERVAL = 10 * 1000;  /* 10 secs */
     private long FASTEST_INTERVAL = 2000; /* 2 sec */
@@ -116,7 +117,7 @@ public class Fragment_Attendance extends Fragment {
         /*********************************
          * SETUP
          **********************************/
-        utility = new Util();
+        utility = new Utility();
 
         System.out.println("### onCreateView ");
         // check is network available or not
@@ -271,7 +272,7 @@ public class Fragment_Attendance extends Fragment {
             // here to request the missing permissions, and then overriding
             //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
             //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
+            // to handle the case where the ic_user_1 grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
             askForPermission(Manifest.permission.ACCESS_FINE_LOCATION, LOCATION);
             return;
@@ -404,18 +405,7 @@ public class Fragment_Attendance extends Fragment {
                 if (error != null)
                     System.out.println("### AppConfig.URL_ATTENDANCE onErrorResponse " + error.getLocalizedMessage());
 
-                new AlertDialog.Builder(getContext())
-                        .setTitle(R.string.app_name)
-                        .setMessage("Something Went Wrong, Try Again Later.")
-                        .setCancelable(false)
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                getActivity().finishAffinity();
-
-                            }
-                        }).show();
+                new Utility().Function_Error_Dialog(getActivity());
 
             }
         }) {
@@ -557,6 +547,7 @@ public class Fragment_Attendance extends Fragment {
                 if (error != null)
                     System.out.println("### AppConfig.URL_ATTENDANCE onErrorResponse " + error.getLocalizedMessage());
 
+                new Utility().Function_Error_Dialog(getActivity());
 
             }
         }) {
@@ -617,7 +608,7 @@ public class Fragment_Attendance extends Fragment {
             // Should we show an explanation?
             if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(), permission)) {
 
-                //This is called if user has denied the permission before
+                //This is called if ic_user_1 has denied the permission before
                 //In this case I am just asking the permission again
                 ActivityCompat.requestPermissions(getActivity(), new String[]{permission}, requestCode);
 

@@ -5,9 +5,7 @@ import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,11 +27,12 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.banyan.androidiws.R;
 import com.banyan.androidiws.adapter.Adapter_Attendance_Report;
+import com.banyan.androidiws.fragment.Fragment_Main_Menu;
 import com.banyan.androidiws.global.AppConfig;
 import com.banyan.androidiws.global.Constants;
 import com.banyan.androidiws.global.NestedListview;
 import com.banyan.androidiws.global.Session_Manager;
-import com.banyan.androidiws.global.Util;
+import com.banyan.androidiws.global.Utility;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import org.json.JSONArray;
@@ -86,7 +85,7 @@ public class Activity_Attendance_Report_For_Dates extends AppCompatActivity {
     private String str_selected_from_date, str_selected_to_date;
 
     private ImageView img_close;
-    private Util utility;
+    private Utility utility;
 
 
     @Override
@@ -95,7 +94,7 @@ public class Activity_Attendance_Report_For_Dates extends AppCompatActivity {
         setContentView(R.layout.activity_attendance_report_for_dates);
         // Inflate the layout for this fragment
 
-        utility = new Util();
+        utility = new Utility();
 
         Function_Verify_Network_Available(this);
 
@@ -263,7 +262,7 @@ public class Activity_Attendance_Report_For_Dates extends AppCompatActivity {
             public void onClick(View view) {
 
 
-                Intent intent = new Intent(Activity_Attendance_Report_For_Dates.this, MainActivity.class);
+                Intent intent = new Intent(Activity_Attendance_Report_For_Dates.this, Fragment_Main_Menu.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);  // close activity
 
@@ -416,18 +415,7 @@ public class Activity_Attendance_Report_For_Dates extends AppCompatActivity {
 
                 dialog.dismiss();
 
-                new AlertDialog.Builder(Activity_Attendance_Report_For_Dates.this)
-                        .setTitle(R.string.app_name)
-                        .setMessage("Something Went Wrong, Try Again")
-                        .setCancelable(false)
-                        .setPositiveButton("Ok", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialogInterface, int i) {
-
-                                finishAffinity();
-
-                            }
-                        }).show();
+                new Utility().Function_Error_Dialog(Activity_Attendance_Report_For_Dates.this);
 
                 System.out.println("### AppConfig.URL_LEAVE_TYPE onErrorResponse");
                 if (error != null)

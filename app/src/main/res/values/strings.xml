@@ -13,12 +13,15 @@
     <string name="closeDrawer">Close Drawer</string>
 
     <string-array name="nav_item_activity_titles">
-        <item>Attendance</item>
-        <item>Attendance Report</item>
-        <item>Leave</item>
-        <item>My Profile</item>
+        <item>Home</item>
+        <item>Home</item>
+        <item>Home</item>
         <item>About</item>
-        <item>Logout</item>
+        <item>Home</item>
+        <item>Home</item>
+        <item>Home</item>
+        <item>Home</item>
+
     </string-array>
 
     <string-array name="string_array_color">
@@ -37,6 +40,46 @@
         <item>All</item>
     </string-array>
 
-    <integer name="slide_animation_duration">300</integer>
+    <string-array name="string_array_ptw_request">
+        <item>NA</item>
+        <item>Yes</item>
+        <item>No</item>
+    </string-array>
 
+
+    <string-array name="string_array_project_work_status">
+        <item>WIP</item>
+        <item>Completed</item>
+        <item>Hold</item>
+        <item>Dropped</item>
+    </string-array>
+
+    <string-array name="string_array_d1_d10">
+        <item>D1</item>
+        <item>D2</item>
+        <item>D3</item>
+        <item>D4</item>
+        <item>D5</item>
+        <item>D6</item>
+        <item>D7</item>
+        <item>D8</item>
+        <item>D9</item>
+        <item>D10</item>
+    </string-array>
+
+    <string-array name="string_array_o1_o4">
+        <item>O1</item>
+        <item>O2</item>
+        <item>O3</item>
+        <item>O4</item>
+    </string-array>
+
+    <string-array name="array_customer_ptw">
+        <item>Full Compliance</item>
+        <item>Partial Compliance</item>
+        <item>Non-Compliance</item>
+    </string-array>
+
+    <integer name="slide_animation_duration">300</integer>
+    <string name="default_notification_channel_id">com.banyan.androidiws.1</string>
 </resources>

@@ -1,0 +1,334 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.appcompat.widget.LinearLayoutCompat xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activity.Activity_Inventory"
+    android:orientation="vertical"
+    android:background="@color/color_background">
+
+    <include layout="@layout/toolbar"></include>
+
+    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+        android:id="@+id/swipe_refresh"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <androidx.appcompat.widget.LinearLayoutCompat
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_margin="10dp">
+
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/card_view_info"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginBottom="10dp"
+                    >
+
+                    <androidx.appcompat.widget.LinearLayoutCompat
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:orientation="vertical"
+                        android:layout_margin="10dp">
+
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Verify Inventory"
+                            android:textStyle="bold"/>
+
+                        <androidx.appcompat.widget.AppCompatTextView
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="Please check inventory list, if you have all listed inventory, then click confirm button."
+                            android:layout_marginTop="5dp"/>
+
+                        <androidx.appcompat.widget.AppCompatButton
+                            android:id="@+id/button_confirm"
+                            android:layout_width="200dp"
+                            android:layout_height="30dp"
+                            android:text="Confirm"
+                            android:textColor="@android:color/white"
+                            android:layout_marginTop="5dp"
+                            android:background="@drawable/bg_button"
+                            android:layout_gravity="center"/>
+
+                    </androidx.appcompat.widget.LinearLayoutCompat>
+
+                </androidx.cardview.widget.CardView>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/layout_computer"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Computer"
+                        android:textColor="@color/colorPrimary"
+                        />
+
+                    <com.banyan.androidiws.global.NestedListview
+                        android:id="@+id/nested_list_view_computer"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                    </com.banyan.androidiws.global.NestedListview>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/text_view_message_computer"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="No Computer To Show"
+                        android:gravity="center"
+                        android:visibility="gone"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/layout_accessories"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="5dp"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Accessories"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginTop="10dp"
+                        />
+
+                    <com.banyan.androidiws.global.NestedListview
+                        android:id="@+id/nested_list_view_accessories"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                    </com.banyan.androidiws.global.NestedListview>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/text_view_message_accessories"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="No Accessories To Show"
+                        android:gravity="center"
+                        android:visibility="gone"/>
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/layout_safety_kit"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="5dp"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Safety Kit"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginTop="10dp"
+                        />
+
+                    <com.banyan.androidiws.global.NestedListview
+                        android:id="@+id/nested_list_view_safety_kit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                    </com.banyan.androidiws.global.NestedListview>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/text_view_message_safty_kit"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="No Safty Kit To Show"
+                        android:gravity="center"
+                        android:visibility="gone"/>
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/layout_ti_tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="5dp"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="TI Tools"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginTop="10dp"
+                        />
+
+                    <com.banyan.androidiws.global.NestedListview
+                        android:id="@+id/nested_list_view_ti_tools"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                    </com.banyan.androidiws.global.NestedListview>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/text_view_message_ti_tools"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="No TI Tools To Show"
+                        android:gravity="center"
+                        android:visibility="gone"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/layout_ue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="5dp"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="UE"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginTop="10dp"
+                        />
+
+                    <com.banyan.androidiws.global.NestedListview
+                        android:id="@+id/nested_list_view_ue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                    </com.banyan.androidiws.global.NestedListview>
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/text_view_message_ue"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="No UE To Show"
+                        android:gravity="center"
+                        android:visibility="gone"/>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/layout_special_kits"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="5dp"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Special Kit"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginTop="10dp"
+                        />
+
+                    <com.banyan.androidiws.global.NestedListview
+                        android:id="@+id/nested_list_view_special_kit"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                    </com.banyan.androidiws.global.NestedListview>
+
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/text_view_message_special_kit"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="No Special Kit Tools To Show"
+                        android:gravity="center"
+                        android:visibility="gone"/>
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+
+                <androidx.appcompat.widget.LinearLayoutCompat
+                    android:id="@+id/layout_cue"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginTop="5dp"
+                    >
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:text="Cue"
+                        android:textColor="@color/colorPrimary"
+                        android:layout_marginTop="10dp"
+                        />
+
+                    <com.banyan.androidiws.global.NestedListview
+                        android:id="@+id/nested_list_view_cue"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="5dp">
+
+                    </com.banyan.androidiws.global.NestedListview>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:id="@+id/text_view_message_cue"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:text="No Cue Tools To Show"
+                        android:gravity="center"
+                        android:visibility="gone"/>
+
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+
+
+
+            </androidx.appcompat.widget.LinearLayoutCompat>
+
+        </ScrollView>
+
+    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+
+</androidx.appcompat.widget.LinearLayoutCompat>

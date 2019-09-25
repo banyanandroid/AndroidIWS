@@ -44,7 +44,7 @@ public class Session_Manager {
     public static final String KEY_USER_NAME_FIRST_LAST ="str_user_name_first_last";
 
 
-    public static final String KEY_USER = "name";
+    public final String KEY_USER = "name";
     // Constructor
     public Session_Manager(Context context) {
 
@@ -78,8 +78,8 @@ public class Session_Manager {
     }
 
     /**
-     * Check login method wil check user login status
-     * If false it will redirect user to login page
+     * Check login method wil check ic_user_1 login status
+     * If false it will redirect ic_user_1 to login page
      * Else won't do anything
      */
 
@@ -87,7 +87,7 @@ public class Session_Manager {
 
         // Check login status
         if (!this.isLoggedIn()) {
-            // user is not logged in redirect him to Login Activity
+            // ic_user_1 is not logged in redirect him to Login Activity
             Intent i = new Intent(_context, Activity_Login.class);
             // Closing all the Act`ivities
             i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);
@@ -115,7 +115,7 @@ public class Session_Manager {
         user.put(KEY_USER_DEPARTMENT_ID, pref.getString(KEY_USER_DEPARTMENT_ID, ""));
         user.put(KEY_USER_PROFILE_ID, pref.getString(KEY_USER_PROFILE_ID, ""));
 
-        // return user
+        // return ic_user_1
         return user;
     }
 
@@ -128,7 +128,7 @@ public class Session_Manager {
         editor.clear();
         editor.commit();
 
-        // After logout redirect user to Loing Activity
+        // After logout redirect ic_user_1 to Loing Activity
         Intent i = new Intent(_context, Activity_Login.class);
         // Closing all the Activities
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP);

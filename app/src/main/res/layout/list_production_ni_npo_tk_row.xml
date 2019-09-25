@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    >
+
+
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:cardElevation="2dp"
+        >
+
+        <androidx.appcompat.widget.LinearLayoutCompat
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="10dp"
+            android:weightSum="18"
+            >
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_view_month"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="jan-2019"
+                android:layout_weight="2"
+                android:gravity="center"
+                />
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                ></View>
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_view_ni_wip"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="10,500"
+                android:layout_weight="2"
+                android:gravity="center"
+                />
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                ></View>
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_view_ni_completed"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="10,500"
+                android:layout_weight="2"
+                android:gravity="center"
+                />
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                ></View>
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_view_npo_wip"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="10,500"
+                android:layout_weight="2"
+                android:gravity="center"
+                />
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                ></View>
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_view_npo_completed"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Completed"
+                android:layout_weight="2"
+                android:gravity="center"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                ></View>
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_view_total_wip"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="10,500"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:layout_marginRight="5dp"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                ></View>
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_view_total_completed"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Completed"
+                android:layout_weight="2"
+                android:gravity="center"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                ></View>
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_view_productivity"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Completed"
+                android:layout_weight="2"
+                android:gravity="center"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                ></View>
+
+
+            <androidx.appcompat.widget.AppCompatTextView
+                android:id="@+id/text_view_rating"
+                android:layout_width="0dp"
+                android:layout_height="match_parent"
+                android:text="Completed"
+                android:textColor="@android:color/white"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:background="@drawable/bg_border_curved_green"
+                android:padding="2dp"
+                android:ellipsize="end"
+                android:maxLines="1"
+                android:visibility="gone"/>
+
+            <View
+                android:layout_width="2dp"
+                android:layout_height="match_parent"
+                android:paddingLeft="5dp"
+                android:paddingRight="5dp"
+                android:visibility="gone"
+                ></View>
+
+            <androidx.appcompat.widget.AppCompatButton
+                android:id="@+id/button_download"
+                android:layout_width="0dp"
+                android:layout_height="30dp"
+                android:text="Download"
+                android:ellipsize="end"
+                android:textColor="@android:color/white"
+                android:maxLines="1"
+                android:layout_weight="2"
+                android:gravity="center"
+                android:padding="5dp"
+                android:background="@drawable/bg_button"/>
+
+
+        </androidx.appcompat.widget.LinearLayoutCompat>
+
+
+
+    </androidx.cardview.widget.CardView>
+
+
+</LinearLayout>

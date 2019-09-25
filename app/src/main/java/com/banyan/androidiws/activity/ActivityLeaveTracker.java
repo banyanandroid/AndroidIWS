@@ -4,7 +4,6 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.content.Context;
-import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -21,7 +20,7 @@ import com.banyan.androidiws.R;
 import com.banyan.androidiws.global.AppConfig;
 import com.banyan.androidiws.global.Constants;
 import com.banyan.androidiws.global.Session_Manager;
-import com.banyan.androidiws.global.Util;
+import com.banyan.androidiws.global.Utility;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import org.json.JSONException;
@@ -55,7 +54,7 @@ public class ActivityLeaveTracker extends AppCompatActivity {
 
     private SpotsDialog dialog;
 
-    private Util utility;
+    private Utility utility;
 
     private Session_Manager session;
 
@@ -71,7 +70,7 @@ public class ActivityLeaveTracker extends AppCompatActivity {
         /*********************************
          * SETUP
          **********************************/
-        utility = new Util();
+        utility = new Utility();
 
 
         /*************************
@@ -97,7 +96,7 @@ public class ActivityLeaveTracker extends AppCompatActivity {
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         toolbar.setTitle("Leave Tracker");
         setSupportActionBar(toolbar);
-        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_white_24dp);
+        toolbar.setNavigationIcon(R.drawable.ic_arrow_back_primary_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -183,7 +182,7 @@ public class ActivityLeaveTracker extends AppCompatActivity {
                         text_total_bench.setText(str_total_bench);
                         text_total_tr.setText(str_total_tr);
                         text_total_working_days.setText(str_total_working_days);
-                        text_productive_days.setText(str_total_productive_days);
+                        text_productive_days.setText(str_total_productive_days +"%");
 
                         dialog.dismiss();
 
@@ -215,6 +214,8 @@ public class ActivityLeaveTracker extends AppCompatActivity {
                 System.out.println("### AppConfig.URL_LOGIN onErrorResponse");
                 if (error != null)
                     System.out.println("### AppConfig.URL_LOGIN onErrorResponse " + error.getLocalizedMessage());
+
+                new Utility().Function_Error_Dialog(ActivityLeaveTracker.this);
             }
         }) {
 

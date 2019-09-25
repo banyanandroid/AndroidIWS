@@ -50,13 +50,6 @@
                     android:orientation="vertical"
                     android:layout_margin="@dimen/dimen_horizontal">
 
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/recycler_view_leave_type"
-                        android:scrollbars="vertical"
-                        android:layout_width="match_parent"
-                        android:layout_height="120dp"
-                        android:background="#dfdfdf"
-                        android:layout_marginTop="@dimen/dimen_horizontal"/>
 
 
                     <EditText

@@ -8,6 +8,7 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import com.banyan.androidiws.R;
+import com.banyan.androidiws.activity.Activity_Add_Leave;
 import com.banyan.androidiws.activity.Activity_Leave_List;
 
 import java.text.ParseException;
@@ -23,7 +24,7 @@ public class Adapter_Leave_Request_List extends BaseAdapter {
     public static final String TAG_LEAVE_TOTAL = "leave_total";
     public static final String TAG_LEAVE_BALANCE = "leave_balance";
 
-    private static ArrayList<HashMap<String,String>> data;
+    private ArrayList<HashMap<String,String>> data;
     private Context context;
     public String[] bgColors;
 
@@ -59,22 +60,21 @@ public class Adapter_Leave_Request_List extends BaseAdapter {
         TextView text_month = (TextView) view.findViewById(R.id.text_month);
         TextView text_date = (TextView)view.findViewById(R.id.text_date);
         TextView text_title = (TextView)view.findViewById(R.id.text_title);
-        TextView text_leave_type = (TextView)view.findViewById(R.id.text_leave_type);
         TextView text_leave_status = (TextView)view.findViewById(R.id.text_leave_status);
         TextView text_no_of_leave_day = (TextView)view.findViewById(R.id.text_no_of_leave_day);
 
         HashMap<String,String> result = new HashMap<>();
         result = data.get(i);
 
-        String str_leave_date = result.get(Activity_Leave_List.TAG_LEAVE_START_DATE);
-        String str_leave_title = result.get(Activity_Leave_List.TAG_LEAVE_REQUEST_SUBJECT);
-        String str_leave_type = result.get(Activity_Leave_List.TAG_LEAVE_REQUEST_TYPE_NAME);
-        String str_leave_status = result.get(Activity_Leave_List.TAG_LEAVE_REQUEST_STATUS);
-        String str_leave_total_dates = result.get(Activity_Leave_List.TAG_LEAVE_REQUEST_TOTAL_DAYS);
+        String str_leave_date = result.get(Activity_Add_Leave.TAG_LEAVE_START_DATE);
+        String str_leave_title = result.get(Activity_Add_Leave.TAG_LEAVE_REQUEST_SUBJECT);
+        String str_leave_status = result.get(Activity_Add_Leave.TAG_LEAVE_REQUEST_STATUS);
+        String str_leave_total_dates = result.get(Activity_Add_Leave.TAG_LEAVE_REQUEST_TOTAL_DAYS);
+        String str_leave_cancel_status = result.get(Activity_Add_Leave.TAG_LEAVE_CANCEL_STATUS);
 
         System.out.println("### getView str_leave_date "+str_leave_date);
         SimpleDateFormat dateFormat = new SimpleDateFormat(
-                "yyyy-MM-dd");
+                "dd-MM-yyyy");
         Date my_leave_Date = null;
         try {
 
@@ -93,6 +93,10 @@ public class Adapter_Leave_Request_List extends BaseAdapter {
             e.printStackTrace();
         }
 
+        text_title.setText(str_leave_title);
+        text_leave_status.setText(str_leave_status);
+        text_no_of_leave_day.setText(str_leave_total_dates+ " Days");
+
         if (str_leave_status.equals("Approved")){
 
             text_leave_status.setBackground(context.getResources().getDrawable(R.drawable.bg_button_green));
@@ -107,10 +111,26 @@ public class Adapter_Leave_Request_List extends BaseAdapter {
 
         }
 
-        text_title.setText(str_leave_title);
-        text_leave_type.setText(str_leave_type);
-        text_leave_status.setText(str_leave_status);
-        text_no_of_leave_day.setText(str_leave_total_dates+ " Days");
+        if (str_leave_status.equals("Approved") && str_leave_cancel_status.equals("0")){
+
+            text_leave_status.setBackground(context.getResources().getDrawable(R.drawable.bg_button_grey));
+            text_leave_status.setText("Pending for Cancellation");
+
+        }
+        if (str_leave_status.equals("Approved") && str_leave_cancel_status.equals("1")){
+
+            text_leave_status.setBackground(context.getResources().getDrawable(R.drawable.bg_button_red));
+            text_leave_status.setText("Request Cancelled");
+
+        }
+        if (str_leave_status.equals("Pending") && str_leave_cancel_status.equals("1")){
+
+            text_leave_status.setBackground(context.getResources().getDrawable(R.drawable.bg_button_red));
+            text_leave_status.setText("Cancelled");
+
+        }
+
+
 
         return view;
     }

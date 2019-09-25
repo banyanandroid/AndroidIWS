@@ -3,31 +3,48 @@
 
     <group android:checkableBehavior="single">
         <item
+            android:id="@+id/nav_home"
+            android:icon="@drawable/ic_home_primary_24dp"
+            android:title="Dashboard" />
+
+        <item
+            android:id="@+id/nav_project_update"
+            android:icon="@drawable/ic_tower"
+            android:title="Project Update" />
+
+
+        <item
+            android:id="@+id/nav_expense"
+            android:icon="@drawable/ic_indian_rupee_primary"
+            android:title="Expense" />
+
+
+        <item
+            android:id="@+id/nav_productivity"
+            android:icon="@drawable/ic_productivity_primary"
+            android:title="Productivity" />
+
+
+        <item
+            android:id="@+id/nav_my_account"
+            android:icon="@mipmap/ic_account"
+            android:title="Personal Details" />
+
+        <item
             android:id="@+id/nav_attendance"
-            android:icon="@drawable/ic_fingerprint_primary_24dp"
-            android:title="@string/label_finger" />
+            android:icon="@mipmap/ic_attendance"
+            android:title="Attendance" />
 
         <item
-            android:id="@+id/nav_attendance_report"
-            android:icon="@drawable/ic_report_24"
-            android:title="Attendance Report" />
-
-        <item
-            android:id="@+id/nav_leave"
-            android:icon="@drawable/ic_assignment_primary_24dp"
-            android:title="@string/label_leave" />
-
-
-
-        <item
-            android:id="@+id/nav_myprofile"
-            android:icon="@drawable/ic_user"
-            android:title="My Profile" />
+            android:id="@+id/nav_inventory"
+            android:icon="@drawable/ic_inventory"
+            android:title="Inventory" />
 
         <item
             android:id="@+id/nav_about_us"
             android:icon="@drawable/ic_info_primary_24dp"
             android:title="@string/label_about_us" />
+
         <item
             android:id="@+id/nav_logout"
             android:icon="@drawable/ic_logout"

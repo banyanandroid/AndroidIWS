@@ -23,7 +23,7 @@ public class Adapter_Attendance_Report extends BaseAdapter {
     public static final String TAG_LEAVE_TOTAL = "leave_total";
     public static final String TAG_LEAVE_BALANCE = "leave_balance";
 
-    private static ArrayList<HashMap<String,String>> data;
+    private ArrayList<HashMap<String,String>> data;
     private Context context;
     public String[] bgColors;
 

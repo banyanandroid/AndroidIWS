@@ -1,20 +1,22 @@
 package com.banyan.androidiws.activity;
 
+import android.app.Dialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.localbroadcastmanager.content.LocalBroadcastManager;
 
 import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
@@ -25,9 +27,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.banyan.androidiws.R;
 import com.banyan.androidiws.global.AppConfig;
+import com.banyan.androidiws.global.Config;
 import com.banyan.androidiws.global.Constants;
+import com.banyan.androidiws.global.NotificationUtils;
 import com.banyan.androidiws.global.Session_Manager;
-import com.banyan.androidiws.global.Util;
+import com.banyan.androidiws.global.Utility;
+import com.google.android.gms.location.LocationRequest;
+import com.google.firebase.messaging.FirebaseMessaging;
 import com.sdsmdg.tastytoast.TastyToast;
 
 import org.json.JSONException;
@@ -39,7 +45,10 @@ import java.util.Map;
 
 import dmax.dialog.SpotsDialog;
 
+
 public class Activity_Login extends AppCompatActivity {
+
+    private static final String TAG = AppCompatActivity.class.getSimpleName();
 
     public static final String TAG_FORGOT_PASSWORD_USERNAME = "username";
 
@@ -68,11 +77,20 @@ public class Activity_Login extends AppCompatActivity {
 
     private LinearLayout layout_root;
 
-    private Util utility;
+    private AlertDialog alert_gps;
 
-    private String str_username = "", str_password = "", str_forgot_password_username = "";
+    private Dialog dialog_location_permission;
+
+    private BroadcastReceiver mRegistrationBroadcastReceiver;
+
+    private LocationRequest mLocationRequest;
+
+    private Utility utility;
+
+    private String str_username = "", str_password = "", str_forgot_password_username = "", str_reg_id = "";
 
     private long back_pressed;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -82,7 +100,7 @@ public class Activity_Login extends AppCompatActivity {
         /*********************************
          *  SETUP
          **********************************/
-        utility = new Util();
+        utility = new Utility();
 
 
         /*********************************
@@ -93,7 +111,7 @@ public class Activity_Login extends AppCompatActivity {
         session_manager = new Session_Manager(getApplicationContext());
         Boolean isLogin = session_manager.isLoggedIn();
         if (isLogin){
-            Intent intent = new Intent(Activity_Login.this, MainActivity.class);
+            Intent intent = new Intent(Activity_Login.this, Activity_Main.class);
             startActivity(intent);
 
             finish();
@@ -110,6 +128,33 @@ public class Activity_Login extends AppCompatActivity {
 
         session_manager = new Session_Manager(this);
 
+        // Firebase Push Notification
+        mRegistrationBroadcastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+
+                System.out.println("### test");
+                // checking for type intent filter
+                if (intent.getAction().equals(Config.REGISTRATION_COMPLETE)) {
+                    // gcm successfully registered
+                    // now subscribe to `global` topic to receive app wide notifications
+                    FirebaseMessaging.getInstance().subscribeToTopic(Config.TOPIC_GLOBAL);
+
+                    displayFirebaseRegId();
+
+                } else if (intent.getAction().equals(Config.PUSH_NOTIFICATION)) {
+                    // new push notification is received
+
+                    String message = intent.getStringExtra("message");
+
+                    Toast.makeText(getApplicationContext(), "Push notification: " + message, Toast.LENGTH_LONG).show();
+
+                }
+
+            }
+        };
+
+        displayFirebaseRegId();
 
         /*********************************
          *  ACTION
@@ -118,6 +163,15 @@ public class Activity_Login extends AppCompatActivity {
         button_login.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
+
+               /* session_manager.createLoginSession("31", "IWS6234", "2", "Department", "2", "121");
+
+                TastyToast.makeText(Activity_Login.this, "Login Successfully.", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
+
+                Intent intent = new Intent(Activity_Login.this, Activity_Main.class);
+                startActivity(intent);
+                overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left); // open new acitivity
+                finish();*/
 
                 str_username = edit_username.getText().toString().trim();
                 str_password = edit_password.getText().toString().trim();
@@ -137,9 +191,51 @@ public class Activity_Login extends AppCompatActivity {
                     Function_Login();
 
                 }
-
             }
         });
+
+    }
+
+
+    // Fetches reg id from shared preferences
+    // and displays on the screen
+    private void displayFirebaseRegId() {
+
+        SharedPreferences pref = getApplicationContext().getSharedPreferences(Config.SHARED_PREF, 0);
+        String regId = pref.getString("regId", null);
+
+        Log.e("", "Firebase reg id: " + regId);
+
+        str_reg_id = regId;
+
+    }
+
+    protected void onResume() {
+        super.onResume();
+
+
+
+        // Notification
+
+        // register GCM registration complete receiver
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.REGISTRATION_COMPLETE));
+
+        // register new push message receiver
+        // by doing this, the activity will be notified each time a new message arrives
+        LocalBroadcastManager.getInstance(this).registerReceiver(mRegistrationBroadcastReceiver,
+                new IntentFilter(Config.PUSH_NOTIFICATION));
+
+        // clear the notification area when the app is opened
+        NotificationUtils.clearNotifications(getApplicationContext());
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        // Notification
+
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mRegistrationBroadcastReceiver);
 
     }
 
@@ -198,6 +294,8 @@ public class Activity_Login extends AppCompatActivity {
                 System.out.println("### AppConfig.url_student_login onErrorResponse");
                 if (error != null)
                     System.out.println("### AppConfig.url_student_login onErrorResponse " + error.getLocalizedMessage());
+
+                new Utility().Function_Error_Dialog(Activity_Login.this);
             }
         }) {
 
@@ -268,12 +366,11 @@ public class Activity_Login extends AppCompatActivity {
                         session_manager.createLoginSession(str_user_id, str_user_name, str_user_type, str_user_role, str_user_department_id, str_user_profile_id);
                         TastyToast.makeText(Activity_Login.this, "Login Successfully.", TastyToast.LENGTH_SHORT, TastyToast.SUCCESS);
 
-                        Intent intent = new Intent(Activity_Login.this, MainActivity.class);
+                        Intent intent = new Intent(Activity_Login.this, Activity_Main.class);
                         startActivity(intent);
-                        finish();
                         overridePendingTransition(R.anim.slide_from_right, R.anim.slide_to_left); // open new acitivity
                         dialog.dismiss();
-
+                        finish();
 
                     } else if(status == 400) {
 
@@ -303,6 +400,9 @@ public class Activity_Login extends AppCompatActivity {
                 System.out.println("### AppConfig.URL_LOGIN onErrorResponse");
                 if (error != null)
                     System.out.println("### AppConfig.URL_LOGIN onErrorResponse " + error.getLocalizedMessage());
+
+                new Utility().Function_Error_Dialog(Activity_Login.this);
+
             }
         }) {
 
@@ -328,6 +428,7 @@ public class Activity_Login extends AppCompatActivity {
                         map.put(pairs.getKey(), "");
                     }
                 }
+
                 return map;
             }
         };
