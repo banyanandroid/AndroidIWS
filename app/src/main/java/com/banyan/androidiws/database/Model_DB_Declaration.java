@@ -21,6 +21,7 @@ public class Model_DB_Declaration {
         this.image = image;
         this.comments = comments;
         this.customer_ptw = customer_ptw;
+        this.image_url = image_url;
 
     }
 

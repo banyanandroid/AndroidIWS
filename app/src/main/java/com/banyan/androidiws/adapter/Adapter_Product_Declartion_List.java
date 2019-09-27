@@ -108,23 +108,23 @@ public class Adapter_Product_Declartion_List extends BaseAdapter {
             String str_declaration = result.getDeclaration();
             String str_declaration_text = result.getText();
             String str_check_box = result.getCheckbox();
-
             String str_declaration_comment = result.getComments();
+            String str_declaration_image_url = result.getImage_url();
 
-
+            System.out.println("### str_declaration_image_url "+str_declaration_image_url);
             System.out.println("### str_check_box "+str_check_box);
 
 
 
             if (bol_is_online){
 
-                String str_declaration_image_url = result.getImage_url();
-                System.out.println("### str_declaration_image_url "+str_declaration_image_url);
-                if (!str_declaration_image_url.isEmpty())
+
+                if (str_declaration_image_url != null && !str_declaration_image_url.equals("null") && !str_declaration_image_url.isEmpty() )
                     Glide.with(context)
                             .load(str_declaration_image_url)
                             .placeholder(R.drawable.ic_galary)
                             .into(image_view_photo);
+
             }else{
 
                 //Bitmap bitmap_declaration_image = result.getImage();
