@@ -52,7 +52,7 @@ public class Fragment_Project_Completed_List extends Fragment implements SwipeRe
     public static final String TAG_CIRCLE = "circle";
     public static final String TAG_PROJECT = "project";
     public static final String TAG_CATEGORY = "category";
-    public static final String TAG_DATE = "Date";
+    public static final String TAG_DATE = "date";
     public static final String TAG_WP = "wp";
     public static final String TAG_ASSIGNED_BY = "assigned_by";
 
@@ -233,9 +233,9 @@ public class Fragment_Project_Completed_List extends Fragment implements SwipeRe
                             String str_cicle = obj_one.getString(TAG_CIRCLE);
                             String str_project = obj_one.getString(TAG_PROJECT);
                             String str_category = obj_one.getString(TAG_CATEGORY);
-                            /*String str_date = obj_one.getString(TAG_DATE);
+                            String str_date = obj_one.getString(TAG_DATE);
                             String str_wp = obj_one.getString(TAG_WP);
-                            String str_assigned_by = obj_one.getString(TAG_ASSIGNED_BY);*/
+                            String str_assigned_by = obj_one.getString(TAG_ASSIGNED_BY);
 
                             HashMap<String, String> item = new HashMap<>();
                             item.put(TAG_DPR_ID, str_dpr_id);
@@ -244,9 +244,9 @@ public class Fragment_Project_Completed_List extends Fragment implements SwipeRe
                             item.put(TAG_CIRCLE, str_cicle);
                             item.put(TAG_PROJECT, str_project);
                             item.put(TAG_CATEGORY, str_category);
-                            /*item.put(TAG_DATE, str_date);
+                            item.put(TAG_DATE, str_date);
                             item.put(TAG_WP, str_wp);
-                            item.put(TAG_ASSIGNED_BY, str_assigned_by);*/
+                            item.put(TAG_ASSIGNED_BY, str_assigned_by);
 
 
                             arrayList.add(item);

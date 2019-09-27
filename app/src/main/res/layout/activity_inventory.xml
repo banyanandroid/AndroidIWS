@@ -67,6 +67,68 @@
                 </androidx.cardview.widget.CardView>
 
                 <androidx.appcompat.widget.LinearLayoutCompat
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:weightSum="8"
+                    android:background="@color/colorPrimary"
+                    android:paddingTop="5dp"
+                    android:paddingBottom="5dp">
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Inventory Type"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="5dp"
+                        android:layout_marginLeft="5dp"
+                        >
+
+                    </androidx.appcompat.widget.AppCompatTextView>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Inventory Configuration"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="5dp">
+
+                    </androidx.appcompat.widget.AppCompatTextView>
+
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Inventory Model"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="5dp">
+
+                    </androidx.appcompat.widget.AppCompatTextView>
+
+                    <androidx.appcompat.widget.AppCompatTextView
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="2"
+                        android:text="Serial No"
+                        android:textColor="@android:color/white"
+                        android:gravity="center"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginRight="5dp">
+
+                    </androidx.appcompat.widget.AppCompatTextView>
+
+                </androidx.appcompat.widget.LinearLayoutCompat>
+
+                <androidx.appcompat.widget.LinearLayoutCompat
                     android:id="@+id/layout_computer"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

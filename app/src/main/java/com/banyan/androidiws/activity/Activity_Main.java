@@ -35,17 +35,18 @@ import com.android.volley.toolbox.Volley;
 import com.banyan.androidiws.R;
 import com.banyan.androidiws.database.DatabaseHandler;
 import com.banyan.androidiws.database.Model_Profile;
-import com.banyan.androidiws.fragment.Fragment_Project_In_Progress_List;
 import com.banyan.androidiws.fragment.Fragment_Main_Menu;
 import com.banyan.androidiws.global.AppConfig;
 import com.banyan.androidiws.global.Constants;
 import com.banyan.androidiws.global.Session_Manager;
 import com.banyan.androidiws.global.Utility;
+import com.banyan.androidiws.service.Service_Upload_Project_Data;
 import com.bumptech.glide.Glide;
 import com.google.android.material.navigation.NavigationView;
 import com.sdsmdg.tastytoast.TastyToast;
 
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -78,7 +79,7 @@ public class Activity_Main extends AppCompatActivity {
 
     private static final String TAG = Activity_Main.class.getSimpleName();
 
-    public static final String TAG_ACTIVITY_ATTEDANCE_REPORT = "Activity_Attendance_Report_For_Months";
+    public static final String TAG_ACTIVITY_ATTEDANCE_REPORT = "Activity_Payroll_For_Months";
     public static final String TAG_ACTIVITY_LEAVE_REQUEST = "Activity_Leave_List";
     public static final String TAG_CALLING_ACTIVITY = "calling_activity";
 
@@ -110,7 +111,7 @@ public class Activity_Main extends AppCompatActivity {
 
     private CircleImageView image_profile;
 
-    private TextView txt_name, text_profile_information;
+    private TextView txt_name, text_profile_information, text_Notification_Item_Count;
 
     private Toolbar toolbar;
 
@@ -137,10 +138,9 @@ public class Activity_Main extends AppCompatActivity {
 
     private  long back_pressed;
 
-    public  int navItemIndex = 0;
+    public  int navItemIndex = 0, int_notification_count = 0;
 
-    private boolean shouldLoadHomeFragOnBackPress = true, bol_is_online;
-
+    private boolean shouldLoadHomeFragOnBackPress = true, bol_is_online, bol_can_logout ;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -153,7 +153,6 @@ public class Activity_Main extends AppCompatActivity {
         utility = new Utility();
 
         new Utility().Function_No_Internet_Dialog(this);
-
 
         /*************************
         *  SESSION
@@ -230,6 +229,15 @@ public class Activity_Main extends AppCompatActivity {
             showGPSDisabledAlertToUser();
         }
 
+
+
+        /*************************
+         *  SETUP
+         **************************/
+
+
+
+
         /*************************
          *  GET DATA
          *************************/
@@ -282,22 +290,108 @@ public class Activity_Main extends AppCompatActivity {
         }
     }
 
+
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
+
         getMenuInflater().inflate(R.menu.menu_main_menu, menu);
+
+        final MenuItem menuItem = menu.findItem(R.id.action_cart);
+
+        View actionView = menuItem.getActionView();
+        text_Notification_Item_Count = (TextView) actionView.findViewById(R.id.cart_badge);
+
+        setupBadge();
+
+        actionView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                onOptionsItemSelected(menuItem);
+            }
+        });
+
         return true;
     }
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
 
-        if (item.getItemId() == R.id.action_logout){
-            session_manager.logoutUser();
-            Toast.makeText(Activity_Main.this, "Logout Sucessfully.", Toast.LENGTH_SHORT).show();
+        if (item.getItemId() == R.id.action_cart){
+
+                Intent intent = new Intent(Activity_Main.this, Activity_Notification_List.class);
+                startActivity(intent);
+
+            return true;
+        }else if (item.getItemId() == R.id.action_logout){
+
+            if (bol_can_logout){
+
+                session_manager.logoutUser();
+                Toast.makeText(Activity_Main.this, "Logout Sucessfully.", Toast.LENGTH_SHORT).show();
+            }else{
+                TastyToast.makeText(Activity_Main.this, "You need to Clock Out First, Then only you can Logout.", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+            }
+
             return true;
         }
 
         return false;
+    }
+
+    private void setupBadge() {
+
+        if (text_Notification_Item_Count != null) {
+            if (int_notification_count == 0) {
+                if (text_Notification_Item_Count.getVisibility() != View.GONE) {
+                    text_Notification_Item_Count.setVisibility(View.GONE);
+                }
+            } else {
+                text_Notification_Item_Count.setText(String.valueOf(Math.min(int_notification_count, 99)));
+                if (text_Notification_Item_Count.getVisibility() != View.VISIBLE) {
+                    text_Notification_Item_Count.setVisibility(View.VISIBLE);
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+
+        /*************************
+         *  PUSH DATA
+         *************************/
+
+        db_handle = new DatabaseHandler(this);
+
+        boolean bol_is_internet_connected = new Utility().IsNetworkAvailable(this);
+
+        if (bol_is_internet_connected){
+
+            Integer int_reached_site_count = db_handle.Function_Get_Reached_Site_Count();
+            Integer int_declaration_count = db_handle.Function_Get_Declaration_Count();
+            Integer int_ptw_request_count = db_handle.Function_Get_PTW_Request_Count();
+            Integer int_start_work_count = db_handle.Function_Get_Start_Work_Count();
+            Integer int_ohs_work_count = db_handle.Function_Get_OHS_Work_Count();
+
+            System.out.println("### int_reached_site_count "+int_reached_site_count);
+            System.out.println("### int_declaration_count "+int_declaration_count);
+            System.out.println("### int_ptw_request_count "+int_ptw_request_count);
+            System.out.println("### int_start_work_count "+int_start_work_count);
+            System.out.println("### int_ohs_work_count "+int_ohs_work_count);
+
+            if (int_reached_site_count == 0 && int_declaration_count == 0 && int_ptw_request_count == 0 &&
+                    int_start_work_count == 0 && int_ohs_work_count == 0){
+
+            }else{
+                // call uploading service
+                Intent intent_ptw_status = new Intent(this, Service_Upload_Project_Data.class);
+                startService(intent_ptw_status);
+            }
+
+        }
+
     }
 
     private void loadHomeFragment() {
@@ -452,7 +546,7 @@ public class Activity_Main extends AppCompatActivity {
                     case R.id.nav_attendance:
                         navItemIndex = 5;
                         TAG_CURRENT = TAG_ATTENDANCE;
-                        Intent intent_attendance = new Intent(Activity_Main.this, Activity_Attendance_Report_For_Months.class);
+                        Intent intent_attendance = new Intent(Activity_Main.this, Activity_Payroll_For_Months.class);
                         startActivity(intent_attendance);
                         break;
 
@@ -473,8 +567,17 @@ public class Activity_Main extends AppCompatActivity {
                     case R.id.nav_logout:
                         navItemIndex = 0;
 
-                        TastyToast.makeText(getApplicationContext(), "Logged Out Successfully.", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
-                        session_manager.logoutUser();
+                        if (bol_can_logout){
+
+                            TastyToast.makeText(getApplicationContext(), "Logged Out Successfully.", TastyToast.LENGTH_LONG, TastyToast.SUCCESS);
+                            session_manager.logoutUser();
+
+                        }else{
+                            TastyToast.makeText(Activity_Main.this, "You need to Clock Out First, Then only you can Logout.", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                            Intent intent_5 = new Intent(Activity_Main.this, Activity_Main.class);
+                            startActivity(intent_5);
+
+                        }
 
                         break;
 
@@ -653,22 +756,23 @@ public class Activity_Main extends AppCompatActivity {
 
                     } else if (status == 400) {
 
-                        dialog.dismiss();
                         TastyToast.makeText(getApplicationContext(), "Bad Request, Try Again.", TastyToast.LENGTH_LONG, TastyToast.ERROR);
 
                     } else if (status == 404) {
 
-                        dialog.dismiss();
                         TastyToast.makeText(getApplicationContext(), msg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
 
                     }
 
-                    dialog.dismiss();
                 } catch (JSONException e) {
                     // TODO Auto-generated catch block
                     e.printStackTrace();
                 }
-                dialog.dismiss();
+
+
+                queue = Volley.newRequestQueue(Activity_Main.this);
+                Function_Check_Clock_In_Out();
+
             }
         }, new Response.ErrorListener() {
 
@@ -718,6 +822,213 @@ public class Activity_Main extends AppCompatActivity {
                 DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
         queue.add(request);
 
+    }
+
+    /********************************
+     *FUNCTION CHECK CHECK IN
+     *********************************/
+    private void Function_Check_Clock_In_Out() {
+
+        System.out.println("### AppConfig.URL_ATTENDANCE_CHECK_IN " + AppConfig.URL_ATTENDANCE_CHECK);
+        StringRequest request = new StringRequest(Request.Method.POST,
+                AppConfig.URL_ATTENDANCE_CHECK, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                System.out.println("###  AppConfig.URL_ATTENDANCE_CHECK_IN : onResponse " + response);
+                Log.d("TAG", "### " + response.toString());
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    int status = obj.getInt("status");
+                    String msg = obj.getString("msg");
+                    if (status == 200) {
+
+                        String str_status_id = obj.getString("status_id");
+
+                        if (str_status_id.equals("1")){
+
+                            bol_can_logout = true;
+
+                        }else if (str_status_id.equals("2")){
+
+                            bol_can_logout = false;
+
+                        }else if (str_status_id.equals("3")){
+
+                            bol_can_logout = true;
+                        }
+
+                    } else if (status == 400) {
+
+                        TastyToast.makeText(Activity_Main.this, "Bad Request, Try Again.", TastyToast.LENGTH_LONG, TastyToast.ERROR);
+
+                    } else if (status == 404) {
+
+                        TastyToast.makeText(Activity_Main.this, msg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+
+                    }
+
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    System.out.println("### exception "+e.getLocalizedMessage());
+
+                }
+
+                queue = Volley.newRequestQueue(Activity_Main.this);
+                Function_Notification_List();
+
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                dialog.dismiss();
+
+                System.out.println("### AppConfig.URL_ATTENDANCE_CHECK_IN onErrorResponse");
+                if (error != null)
+                    System.out.println("### AppConfig.URL_LOGIN onErrorResponse " + error.getLocalizedMessage());
+
+                new Utility().Function_Error_Dialog(Activity_Main.this);
+
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+
+                params.put("userid", str_user_id);
+                params.put("usertype", str_user_type);
+                params.put("dept_id", str_user_department_id);
+
+                System.out.println("### AppConfig.URL_ATTENDANCE_CHECK_IN " + "userid" + " : " + str_user_id);
+                System.out.println("### " + "usertype" + " : " + str_user_type);
+                System.out.println("### " + "dept_id" + " : " + str_user_department_id);
+
+
+                return checkParams(params);
+
+            }
+
+            private Map<String, String> checkParams(Map<String, String> map) {
+                Iterator<Map.Entry<String, String>> it = map.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, String> pairs = (Map.Entry<String, String>) it.next();
+                    if (pairs.getValue() == null) {
+                        map.put(pairs.getKey(), "");
+                    }
+                }
+                return map;
+            }
+
+        };
+
+        // Adding request to request queue
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                new Constants().MY_SOCKET_TIMEOUT_MS,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
+
+    }
+
+    /********************************
+     *FUNCTION NOTIFICATION LIST
+     *********************************/
+    private void Function_Notification_List() {
+
+        System.out.println("### AppConfig.URL_NOTIFICATION_LIST " + AppConfig.URL_NOTIFICATION_LIST);
+
+        StringRequest request = new StringRequest(Request.Method.POST,
+                AppConfig.URL_NOTIFICATION_LIST, new Response.Listener<String>() {
+
+            @Override
+            public void onResponse(String response) {
+                System.out.println("###  AppConfig.URL_NOTIFICATION_LIST : onResponse " + response);
+                Log.d("TAG", "### " + response.toString());
+                try {
+                    JSONObject obj = new JSONObject(response);
+                    int status = obj.getInt("status");
+                    String msg = obj.getString("msg");
+
+                    if (status == 200) {
+
+                        JSONArray array_request = obj.getJSONArray("records");
+
+                        int_notification_count = array_request.length();
+
+                        dialog.dismiss();
+
+
+                    } else if (status == 400) {
+
+                        int_notification_count = 0;
+
+                        dialog.dismiss();
+                    } else if (status == 404) {
+
+                        int_notification_count = 0;
+                        dialog.dismiss();
+                    }
+
+                    setupBadge(); // update notification count
+
+                } catch (JSONException e) {
+                    // TODO Auto-generated catch block
+                    e.printStackTrace();
+                    System.out.println("### JSONException "+e.getLocalizedMessage());
+                }
+
+                dialog.dismiss();
+            }
+        }, new Response.ErrorListener() {
+
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+                dialog.dismiss();
+
+                System.out.println("### AppConfig.URL_NOTIFICATION_LIST onErrorResponse");
+                if (error != null)
+                    System.out.println("### AppConfig.URL_NOTIFICATION_LIST onErrorResponse " + error.getLocalizedMessage());
+
+                new Utility().Function_Error_Dialog(Activity_Main.this);
+
+
+            }
+        }) {
+
+            @Override
+            protected Map<String, String> getParams() {
+                Map<String, String> params = new HashMap<String, String>();
+
+                params.put(Activity_Leave_List.TAG_USER_ID, str_user_id);
+
+                System.out.println("###" + Activity_Leave_List.TAG_USER_ID + " : " + str_user_id);
+
+                return checkParams(params);
+            }
+
+            private Map<String, String> checkParams(Map<String, String> map) {
+                Iterator<Map.Entry<String, String>> it = map.entrySet().iterator();
+                while (it.hasNext()) {
+                    Map.Entry<String, String> pairs = (Map.Entry<String, String>) it.next();
+                    if (pairs.getValue() == null) {
+                        map.put(pairs.getKey(), "");
+                    }
+                }
+                return map;
+            }
+        };
+
+        // Adding request to request queue
+        request.setRetryPolicy(new DefaultRetryPolicy(
+                new Constants().MY_SOCKET_TIMEOUT_MS,
+                DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                DefaultRetryPolicy.DEFAULT_BACKOFF_MULT));
+        queue.add(request);
     }
 
     private void Function_Offline_Get_Profile(){

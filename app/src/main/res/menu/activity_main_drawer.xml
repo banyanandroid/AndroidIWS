@@ -32,8 +32,8 @@
 
         <item
             android:id="@+id/nav_attendance"
-            android:icon="@mipmap/ic_attendance"
-            android:title="Attendance" />
+            android:icon="@drawable/ic_indian_rupee_primary"
+            android:title="Payroll" />
 
         <item
             android:id="@+id/nav_inventory"

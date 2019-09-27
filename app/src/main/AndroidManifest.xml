@@ -2,15 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.banyan.androidiws">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
-    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
-
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_iws"
@@ -18,12 +9,10 @@
         android:roundIcon="@mipmap/ic_iws"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.Activity_Notification_List"></activity>
 
-        <uses-library
-            android:name="org.apache.http.legacy"
-            android:required="false" />
-
-        <activity android:name=".activity.Activity_Splash"
+        <activity
+            android:name=".activity.Activity_Splash"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden">
@@ -39,17 +28,16 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-
-        <activity android:name=".activity.Activity_View_Image"
+        <activity
+            android:name=".activity.Activity_View_Image"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"></activity>
-
-        <activity android:name=".activity.Activity_Inventory"
+            android:windowSoftInputMode="stateHidden" />
+        <activity
+            android:name=".activity.Activity_Inventory"
             android:configChanges="orientation"
-            android:screenOrientation="portrait"
-            android:windowSoftInputMode="stateHidden"/>
-
+            android:screenOrientation="landscape"
+            android:windowSoftInputMode="stateHidden" />
         <activity
             android:name=".activity.Activity_Productivity_NI_NPO_TK"
             android:configChanges="orientation"
@@ -85,13 +73,11 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".activity.Activity_Project_MM_Completed"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".activity.Activity_Project_Pager"
             android:configChanges="orientation"
@@ -107,7 +93,6 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
-
         <activity
             android:name=".activity.Activity_About"
             android:configChanges="orientation"
@@ -134,7 +119,7 @@
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
         <activity
-            android:name=".activity.Activity_Attendance_Report_For_Months"
+            android:name=".activity.Activity_Payroll_For_Months"
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
@@ -148,35 +133,52 @@
             android:configChanges="orientation"
             android:screenOrientation="portrait"
             android:windowSoftInputMode="stateHidden" />
+        <!--to receive broadcast when internet is available-->
+        <receiver
+            android:name=".broadcast_receiver.BroadcastReceiver_Internet_Connection" >
+            <intent-filter>
+                <action android:name="android.net.conn.CONNECTIVITY_CHANGE" />
+            </intent-filter>
+        </receiver>
 
-        <!-- Firebase Notifications -->
+        <receiver android:name=".broadcast_receiver.BroadcastReceiver_Alarm_Receiver_PTW_Status">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver> <!-- Firebase Notifications -->
+        <receiver android:name=".broadcast_receiver.BroadcastReceiver_Alarm_Receiver_Photo_Upload">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver> <!-- service for ptw status -->
+        <receiver android:name=".broadcast_receiver.BroadCastReceiver_DeviceBootReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver> <!-- service for photo upload -->
         <service
             android:name=".service.MyFirebaseMessagingService"
             android:stopWithTask="false">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
-
-        </service> <!-- service for ptw status -->
-        <service android:name=".service.Service_PTW_Status" /> <!-- service for photo upload -->
-        <service android:name=".service.Service_Photo_Upload" /> <!-- to receive alarm for ptw status -->
-
-
-        <receiver android:name=".broadcast_receiver.BroadcastReceiver_Alarm_Receiver_PTW_Status">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver> <!-- to receive alarm for photo upload -->
-        <receiver android:name=".broadcast_receiver.BroadcastReceiver_Alarm_Receiver_Photo_Upload">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver> <!-- to receive broadcast when device is booted -->
-        <receiver android:name=".broadcast_receiver.BroadCastReceiver_DeviceBootReceiver">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED" />
-            </intent-filter>
-        </receiver>
+        </service> <!-- to receive alarm for ptw status -->
+        <service android:name=".service.Service_Upload_Project_Data" />
+        <service android:name=".service.Service_PTW_Status" /> <!-- to receive alarm for photo upload -->
+        <service android:name=".service.Service_Photo_Upload" /> <!-- to receive broadcast when device is booted -->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
 </manifest>

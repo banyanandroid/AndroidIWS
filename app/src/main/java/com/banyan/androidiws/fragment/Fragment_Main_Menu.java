@@ -2,7 +2,6 @@ package com.banyan.androidiws.fragment;
 
 import android.Manifest;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -43,19 +42,13 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.banyan.androidiws.R;
 import com.banyan.androidiws.activity.Activity_Account_Details;
-import com.banyan.androidiws.activity.Activity_Attendance_Report_For_Months;
+import com.banyan.androidiws.activity.Activity_Payroll_For_Months;
 import com.banyan.androidiws.activity.Activity_Expense;
 import com.banyan.androidiws.activity.Activity_Inventory;
-import com.banyan.androidiws.activity.Activity_Main;
 import com.banyan.androidiws.activity.Activity_Productivity_NI_NPO_TK;
-import com.banyan.androidiws.activity.Activity_Project_NI_NPO_TK_Completed;
 import com.banyan.androidiws.activity.Activity_Project_Pager;
-import com.banyan.androidiws.adapter.Adapter_Children_List;
-import com.banyan.androidiws.adapter.Adapter_Document_List;
-import com.banyan.androidiws.adapter.Adapter_Experience_List;
 import com.banyan.androidiws.database.DatabaseHandler;
 import com.banyan.androidiws.database.Model_Dashboard;
-import com.banyan.androidiws.database.Model_Profile;
 import com.banyan.androidiws.global.AppConfig;
 import com.banyan.androidiws.global.Constants;
 import com.banyan.androidiws.global.Session_Manager;
@@ -69,7 +62,6 @@ import com.google.android.gms.location.LocationSettingsRequest;
 import com.google.android.gms.location.SettingsClient;
 import com.sdsmdg.tastytoast.TastyToast;
 
-import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -347,7 +339,7 @@ public class Fragment_Main_Menu extends Fragment implements SwipeRefreshLayout.O
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(getContext(), Activity_Attendance_Report_For_Months.class);
+                Intent intent = new Intent(getContext(), Activity_Payroll_For_Months.class);
                 startActivity(intent);
 
             }

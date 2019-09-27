@@ -6,12 +6,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.core.widget.ImageViewCompat;
 
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.view.View;
 import android.widget.TextView;
 
 import com.banyan.androidiws.R;
+import com.banyan.androidiws.global.Utility;
 import com.bumptech.glide.Glide;
 
 
@@ -26,6 +28,8 @@ public class Activity_View_Image extends AppCompatActivity {
     private SharedPreferences.Editor editor;
 
     private Toolbar toolbar;
+
+    private boolean bol_is_online;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,7 +57,7 @@ public class Activity_View_Image extends AppCompatActivity {
          ****************************/
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         editor = sharedPreferences.edit();
-
+        bol_is_online = new Utility().IsNetworkAvailable(Activity_View_Image.this);
 
         /***************************
          *  GET DATA
@@ -65,11 +69,22 @@ public class Activity_View_Image extends AppCompatActivity {
         if (str_image_url.isEmpty())
             str_image_url = "test";
 
+        if (bol_is_online){
 
-        Glide.with(this)
-                .load(str_image_url)
-                .placeholder(R.drawable.ic_galary)
-                .into(image_view_photo);
+            Glide.with(this)
+                    .load(str_image_url)
+                    .placeholder(R.drawable.ic_galary)
+                    .into(image_view_photo);
+
+        }else{
+
+            Bitmap bitmap = new Utility().Function_StringToBitMap(str_image_url);
+
+            if (bitmap != null){
+                image_view_photo.setImageBitmap(bitmap);
+            }
+
+        }
 
 
     }

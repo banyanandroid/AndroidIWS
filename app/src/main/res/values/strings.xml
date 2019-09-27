@@ -1,16 +1,20 @@
 <resources>
+    <integer name="slide_animation_duration">300</integer>
+
+
     <string name="app_name">IWS</string>
-
-
     <string name="label_finger">Attendance</string>
     <string name="label_leave">Leave</string>
     <string name="label_about_us">About</string>
-    <string name="logout">Logout</string>
 
     <!-- TODO: Remove or change this placeholder text -->
+    <string name="logout">Logout</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="openDrawer">Open Drawer</string>
+
     <string name="closeDrawer">Close Drawer</string>
+
+    <string name="default_notification_channel_id">com.banyan.androidiws.1</string>
 
     <string-array name="nav_item_activity_titles">
         <item>Home</item>
@@ -33,6 +37,7 @@
         <item>#24c6d5</item>
     </string-array>
 
+
     <string-array name="string_array_leave_filter">
         <item>Pending</item>
         <item>Approved</item>
@@ -45,7 +50,6 @@
         <item>Yes</item>
         <item>No</item>
     </string-array>
-
 
     <string-array name="string_array_project_work_status">
         <item>WIP</item>
@@ -73,13 +77,9 @@
         <item>O3</item>
         <item>O4</item>
     </string-array>
-
     <string-array name="array_customer_ptw">
         <item>Full Compliance</item>
         <item>Partial Compliance</item>
         <item>Non-Compliance</item>
     </string-array>
-
-    <integer name="slide_animation_duration">300</integer>
-    <string name="default_notification_channel_id">com.banyan.androidiws.1</string>
 </resources>

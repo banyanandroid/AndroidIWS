@@ -31,7 +31,7 @@
                     <androidx.appcompat.widget.AppCompatTextView
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:text="Trail Version"
+                        android:text="Trial Version"
                         android:textColor="@color/colorRed"
                         android:gravity="right"
                         android:layout_marginTop="10dp"
@@ -506,13 +506,13 @@
                                     android:layout_width="40dp"
                                     android:layout_height="40dp"
                                     android:layout_gravity="center_horizontal"
-                                    android:src="@mipmap/ic_attendance" />
+                                    android:src="@drawable/ic_indian_rupee_primary" />
 
                                 <TextView
                                     android:layout_width="wrap_content"
                                     android:layout_height="40dp"
                                     android:gravity="center"
-                                    android:text="Attendance Report"
+                                    android:text="Payroll"
                                     android:textAlignment="center"
                                     android:textColor="@android:color/black"
                                     android:textSize="14sp"
@@ -570,6 +570,7 @@
                             android:layout_marginBottom="@dimen/dimen_horizontal"
                             app:cardCornerRadius="8dp"
                             app:cardElevation="8dp"
+                            android:visibility="gone"
                             >
 
                             <LinearLayout
@@ -590,7 +591,7 @@
                                     android:layout_width="wrap_content"
                                     android:layout_height="40dp"
                                     android:gravity="center"
-                                    android:text="Reward"
+                                    android:text="Reward &amp; Penality"
                                     android:textAlignment="center"
                                     android:textColor="@android:color/black"
                                     android:textSize="14sp"
@@ -601,43 +602,6 @@
                         </androidx.cardview.widget.CardView>
 
 
-                        <androidx.cardview.widget.CardView
-                            android:id="@+id/cardview_penality"
-                            android:layout_width="0dp"
-                            android:layout_height="wrap_content"
-                            android:layout_columnWeight="1"
-                            android:layout_marginLeft="@dimen/dimen_horizontal"
-                            android:layout_marginRight="@dimen/dimen_horizontal"
-                            android:layout_marginBottom="@dimen/dimen_horizontal"
-                            app:cardCornerRadius="8dp"
-                            app:cardElevation="8dp">
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:layout_gravity="center_horizontal|center_vertical"
-                                android:layout_margin="8dp"
-                                android:orientation="vertical">
-
-                                <ImageView
-                                    android:layout_width="40dp"
-                                    android:layout_height="40dp"
-                                    android:layout_gravity="center_horizontal"
-                                    android:src="@drawable/ic_penalty_gray" />
-
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="40dp"
-                                    android:gravity="center"
-                                    android:text="Penality"
-                                    android:textAlignment="center"
-                                    android:textColor="@android:color/black"
-                                    android:textSize="14sp"
-                                    android:textStyle="bold" />
-
-                            </LinearLayout>
-
-                        </androidx.cardview.widget.CardView>
 
 
                     </GridLayout>

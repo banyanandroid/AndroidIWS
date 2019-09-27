@@ -38,6 +38,7 @@ public class Activity_Leave_Details extends AppCompatActivity {
     public static final String TAG_LEAVE_LEAVE_TYPE_ID = "leave_type_id";
     public static final String TAG_LEAVE_SUBJECT = "subject";
     public static final String TAG_LEAVE_STATUS = "status";
+    public static final String TAG_LEAVE_CANCEL_STATUS = "cancel_status";
 
 
     public static final String TAG_LEAVE_ID = "leave_id";
@@ -118,6 +119,7 @@ public class Activity_Leave_Details extends AppCompatActivity {
         str_leave_type_id = sharedPreferences.getString(TAG_LEAVE_LEAVE_TYPE_ID, "");
         String str_leave_subject = sharedPreferences.getString(TAG_LEAVE_SUBJECT, "");
         String str_leave_status = sharedPreferences.getString(TAG_LEAVE_STATUS, "0");
+        String str_leave_cancel_status = sharedPreferences.getString(TAG_LEAVE_CANCEL_STATUS, "0");
 
         System.out.println("### str_leave_type_id " + str_leave_type_id);
         //set data
@@ -144,6 +146,26 @@ public class Activity_Leave_Details extends AppCompatActivity {
                 text_leave_status.setBackground(getResources().getDrawable(R.drawable.bg_button_red));
             }
 
+            if (str_leave_status.equals("Approved") && str_leave_cancel_status.equals("0")){
+
+                text_leave_status.setBackground(getResources().getDrawable(R.drawable.bg_button_grey));
+                text_leave_status.setText("Pending for Cancellation");
+
+            }
+            if (str_leave_status.equals("Approved") && str_leave_cancel_status.equals("1")){
+
+                text_leave_status.setBackground(getResources().getDrawable(R.drawable.bg_button_red));
+                text_leave_status.setText("Request Cancelled");
+
+            }
+            if (str_leave_status.equals("Pending") && str_leave_cancel_status.equals("1")){
+
+                text_leave_status.setBackground(getResources().getDrawable(R.drawable.bg_button_red));
+                text_leave_status.setText("Cancelled");
+
+            }
+
+
         } catch (ParseException e) {
             e.printStackTrace();
         }
@@ -154,7 +176,7 @@ public class Activity_Leave_Details extends AppCompatActivity {
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(Activity_Leave_Details.this, Activity_Attendance_Report_For_Months.class);
+                Intent intent = new Intent(Activity_Leave_Details.this, Activity_Payroll_For_Months.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);
             }

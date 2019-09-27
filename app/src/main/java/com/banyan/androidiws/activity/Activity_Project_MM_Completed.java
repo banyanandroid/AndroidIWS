@@ -155,7 +155,7 @@ public class Activity_Project_MM_Completed extends AppCompatActivity {
 
     private int count;
 
-    private boolean bol_is_add_image, bol_ptw_copy_image = false, bol_ohs_work_image = false;
+    private boolean bol_is_add_image, bol_ptw_copy_image = false, bol_ohs_work_image = false, bol_is_online;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -166,6 +166,8 @@ public class Activity_Project_MM_Completed extends AppCompatActivity {
          * SETUP
          **********************************/
         utility = new Utility();
+
+        bol_is_online = utility.IsNetworkAvailable(Activity_Project_MM_Completed.this);
 
         /*****************************
          *  SESSION
@@ -613,11 +615,11 @@ public class Activity_Project_MM_Completed extends AppCompatActivity {
 
                     System.out.println("### " + str_calling_type.equals(TAG_CALLING_TYPE_WORK_SETUP));
 
-                    adapter_declaration_d = new Adapter_Product_Declartion_List(Activity_Project_MM_Completed.this, arrayList_declaration_d, Activity_Project_MM_Completed.this);
-                    nested_list_view_declaration_d.setAdapter(adapter_declaration_d);
+                    /*adapter_declaration_d = new Adapter_Product_Declartion_List(Activity_Project_MM_Completed.this, arrayList_declaration_d, Activity_Project_MM_Completed.this, bol_is_online);
+                    nested_list_view_declaration_d.setAdapter(adapter_declaration_d);*/
 
-                    adapter_declaration_o = new Adapter_Product_Declartion_List(Activity_Project_MM_Completed.this, arrayList_declaration_o, Activity_Project_MM_Completed.this);
-                    nested_list_view_declaration_o.setAdapter(adapter_declaration_o);
+                    /*adapter_declaration_o = new Adapter_Product_Declartion_List(Activity_Project_MM_Completed.this, arrayList_declaration_o, Activity_Project_MM_Completed.this, bol_is_online);
+                    nested_list_view_declaration_o.setAdapter(adapter_declaration_o);*/
 
 
                 } catch (JSONException e) {

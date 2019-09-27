@@ -20,135 +20,50 @@
             <androidx.appcompat.widget.LinearLayoutCompat
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
                 android:orientation="horizontal"
-                android:weightSum="10">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="5"
-                    android:text="Inventory Type"
-                    android:textColor="@color/primary_text" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:text=" : "
-                    android:textColor="@color/primary_text" />
+                android:weightSum="8"
+                android:padding="5dp"
+                android:paddingBottom="5dp">
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/text_view_inventory_type"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="Inventory Type" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
-                android:orientation="horizontal"
-                android:weightSum="10">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="5"
-                    android:text="Inventory Configuration"
-                    android:textColor="@color/primary_text" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:text=" : "
-                    android:textColor="@color/primary_text" />
+                    android:layout_weight="2"
+                    android:text="Inventory Type"
+                    android:layout_marginLeft="5dp"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/text_view_inventory_configuration"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="Inventory Type" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
-                android:orientation="horizontal"
-                android:weightSum="10">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="5"
-                    android:text="Inventory Model"
-                    android:textColor="@color/primary_text" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:text=" : "
-                    android:textColor="@color/primary_text" />
+                    android:layout_weight="2"
+                    android:text="Inventory Type"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/text_view_inventory_model"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="Inventory Type" />
-
-            </androidx.appcompat.widget.LinearLayoutCompat>
-
-            <androidx.appcompat.widget.LinearLayoutCompat
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginLeft="10dp"
-                android:layout_marginTop="5dp"
-                android:layout_marginRight="10dp"
-                android:layout_marginBottom="10dp"
-                android:orientation="horizontal"
-                android:weightSum="10">
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="0dp"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:layout_weight="5"
-                    android:text="Serial No"
-                    android:textColor="@color/primary_text" />
-
-                <androidx.appcompat.widget.AppCompatTextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginRight="10dp"
-                    android:text=" : "
-                    android:textColor="@color/primary_text" />
+                    android:layout_weight="2"
+                    android:text="Inventory Type"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center"/>
 
                 <androidx.appcompat.widget.AppCompatTextView
                     android:id="@+id/text_view_serial_no"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_weight="5"
-                    android:text="Inventory Type" />
+                    android:layout_weight="2"
+                    android:text="Inventory Type"
+                    android:layout_marginRight="5dp"
+                    android:gravity="center"/>
 
             </androidx.appcompat.widget.LinearLayoutCompat>
+
 
         </androidx.appcompat.widget.LinearLayoutCompat>
 

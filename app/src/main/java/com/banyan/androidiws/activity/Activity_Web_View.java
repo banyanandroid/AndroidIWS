@@ -64,6 +64,8 @@ public class Activity_Web_View extends AppCompatActivity {
         String url = sharedPreferences.getString(TAG_URL, "");
         String screen_title = sharedPreferences.getString(TAG_SCREEN_TITLE, "");
 
+        System.out.println("### url "+url);
+        System.out.println("### screen_title "+screen_title);
 
         /******************************
          *  FIND VIEW BY ID

@@ -40,6 +40,7 @@ import com.android.volley.toolbox.Volley;
 import com.banyan.androidiws.R;
 import com.banyan.androidiws.adapter.Adapter_Product_Declartion_List;
 import com.banyan.androidiws.database.DatabaseHandler;
+import com.banyan.androidiws.database.Model_DB_Declaration;
 import com.banyan.androidiws.database.Model_PTW_Status;
 import com.banyan.androidiws.fragment.Fragment_Project_Completed_List;
 import com.banyan.androidiws.fragment.Fragment_Project_In_Progress_List;
@@ -78,6 +79,7 @@ public class Activity_Project_NI_NPO_TK_Completed extends AppCompatActivity impl
     public static final String TAG_DECLARATION_O = "declaration-0";
     public static final String TAG_DECLARATION_D = "declaration-D";
     public static final String TAG_DECLARATION = "declaration";
+    public static final String TAG_DECLARATION_TEXT = "text";
     public static final String TAG_DECLARATION_CHECK_BOX = "chekbox";
     public static final String TAG_DECLARATION_IMAGE = "image";
     public static final String TAG_DECLARATION_COMMENT = "comments";
@@ -122,7 +124,7 @@ public class Activity_Project_NI_NPO_TK_Completed extends AppCompatActivity impl
 
     private SpotsDialog dialog, spotDialog;
 
-    private NestedListview nested_list_view_declaration_d, nested_list_view_declaration_o;
+    private NestedListview nested_list_view_declaration_d;
 
     private ImageView image_view, image_view_ptw_copy;
 
@@ -136,13 +138,13 @@ public class Activity_Project_NI_NPO_TK_Completed extends AppCompatActivity impl
 
     private DatabaseHandler database_hanlde;
 
-    private ArrayList<HashMap<String, String>> arrayList_declaration_d, arrayList_declaration_o;
+    private ArrayList<Model_DB_Declaration> arrayList_declaration_d, arrayList_declaration_o;
 
     private ArrayList<String> Arraylist_image_encode;
 
     private ArrayList<Image> images = new ArrayList<>();
 
-    private Adapter_Product_Declartion_List adapter_declaration_d, adapter_declaration_o;
+    private Adapter_Product_Declartion_List adapter_declaration_d;
 
     private Timer timer_PTW_Status, timer_Photo_Upload;
 
@@ -159,7 +161,7 @@ public class Activity_Project_NI_NPO_TK_Completed extends AppCompatActivity impl
 
     private int count;
 
-    private boolean bol_is_add_image, bol_ptw_copy_image = false, bol_ohs_work_image = false;
+    private boolean bol_is_add_image, bol_ptw_copy_image = false, bol_ohs_work_image = false, bol_is_online;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -170,6 +172,7 @@ public class Activity_Project_NI_NPO_TK_Completed extends AppCompatActivity impl
          * SETUP
          **********************************/
         utility = new Utility();
+        bol_is_online = utility.IsNetworkAvailable(Activity_Project_NI_NPO_TK_Completed.this);
 
         /*****************************
          *  SESSION
@@ -227,7 +230,7 @@ public class Activity_Project_NI_NPO_TK_Completed extends AppCompatActivity impl
         edit_text_ptw_no = (AppCompatEditText) findViewById(R.id.edit_text_ptw_no);
 
         nested_list_view_declaration_d = (NestedListview) findViewById(R.id.nested_list_view_declaration_d);
-        nested_list_view_declaration_o = (NestedListview) findViewById(R.id.nested_list_view_declaration_o);
+
 
         search_spinner_work_status = (SearchableSpinner) findViewById(R.id.search_spinner_work_status);
         search_spinner_work_at = (SearchableSpinner) findViewById(R.id.search_spinner_work_at);
@@ -577,6 +580,7 @@ public class Activity_Project_NI_NPO_TK_Completed extends AppCompatActivity impl
 
                             String str_declaration_type = obj_one.getString(TAG_DECLARATION_TYPE);
                             String str_declaration = obj_one.getString(TAG_DECLARATION);
+                            String str_declaration_text = obj_one.getString(TAG_DECLARATION_TEXT);
                             String str_check_box = obj_one.getString(TAG_DECLARATION_CHECK_BOX);
                             String str_image = obj_one.getString(TAG_DECLARATION_IMAGE);
                             String str_comment = obj_one.getString(TAG_DECLARATION_COMMENT);
@@ -588,7 +592,15 @@ public class Activity_Project_NI_NPO_TK_Completed extends AppCompatActivity impl
                             item.put(TAG_DECLARATION_IMAGE, str_image);
                             item.put(TAG_DECLARATION_COMMENT, str_comment);
 
-                            arrayList_declaration_d.add(item);
+                            // add declaration in sqlite
+                            Bitmap bitmap_galary = BitmapFactory.decodeResource(getResources(),
+                                    R.drawable.ic_galary);
+
+                            Model_DB_Declaration model_db_declaration = new Model_DB_Declaration(0, "", "", str_declaration_type,
+                                    str_declaration, str_declaration_text, str_check_box, bitmap_galary, str_comment, "", str_image);
+
+
+                            arrayList_declaration_d.add(model_db_declaration);
 
                         }
 
@@ -601,6 +613,7 @@ public class Activity_Project_NI_NPO_TK_Completed extends AppCompatActivity impl
 
                             String str_declaration_type = obj_one.getString(TAG_DECLARATION_TYPE);
                             String str_declaration = obj_one.getString(TAG_DECLARATION);
+                            String str_declaration_text = obj_one.getString(TAG_DECLARATION_TEXT);
                             String str_check_box = obj_one.getString(TAG_DECLARATION_CHECK_BOX);
                             String str_image = obj_one.getString(TAG_DECLARATION_IMAGE);
                             String str_comment = obj_one.getString(TAG_DECLARATION_COMMENT);
@@ -612,7 +625,14 @@ public class Activity_Project_NI_NPO_TK_Completed extends AppCompatActivity impl
                             item.put(TAG_DECLARATION_IMAGE, str_image);
                             item.put(TAG_DECLARATION_COMMENT, str_comment);
 
-                            arrayList_declaration_o.add(item);
+                            // add declaration in sqlite
+                            Bitmap bitmap_galary = BitmapFactory.decodeResource(getResources(),
+                                    R.drawable.ic_galary);
+
+                            Model_DB_Declaration model_db_declaration = new Model_DB_Declaration(0, "", "", str_declaration_type,
+                                    str_declaration, str_declaration_text, str_check_box, bitmap_galary, str_comment, "", str_image);
+
+                            arrayList_declaration_o.add(model_db_declaration);
 
                         }
 
@@ -652,11 +672,8 @@ public class Activity_Project_NI_NPO_TK_Completed extends AppCompatActivity impl
 
                     System.out.println("### " + str_calling_type.equals(TAG_CALLING_TYPE_WORK_SETUP));
 
-                    adapter_declaration_d = new Adapter_Product_Declartion_List(Activity_Project_NI_NPO_TK_Completed.this, arrayList_declaration_d, Activity_Project_NI_NPO_TK_Completed.this);
+                    adapter_declaration_d = new Adapter_Product_Declartion_List(Activity_Project_NI_NPO_TK_Completed.this, arrayList_declaration_d, Activity_Project_NI_NPO_TK_Completed.this, bol_is_online);
                     nested_list_view_declaration_d.setAdapter(adapter_declaration_d);
-
-                    adapter_declaration_o = new Adapter_Product_Declartion_List(Activity_Project_NI_NPO_TK_Completed.this, arrayList_declaration_o, Activity_Project_NI_NPO_TK_Completed.this);
-                    nested_list_view_declaration_o.setAdapter(adapter_declaration_o);
 
 
                 } catch (JSONException e) {

@@ -2,7 +2,6 @@ package com.banyan.androidiws.activity;
 
 
 import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
@@ -15,7 +14,6 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -130,7 +128,7 @@ public class Activity_Leave_List extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(Activity_Leave_List.this, Activity_Attendance_Report_For_Months.class);
+                Intent intent = new Intent(Activity_Leave_List.this, Activity_Payroll_For_Months.class);
                 startActivity(intent);
             }
         });
@@ -223,7 +221,7 @@ public class Activity_Leave_List extends AppCompatActivity {
     public void onBackPressed() {
         super.onBackPressed();
 
-        Intent intent = new Intent(Activity_Leave_List.this, Activity_Attendance_Report_For_Months.class);
+        Intent intent = new Intent(Activity_Leave_List.this, Activity_Payroll_For_Months.class);
         startActivity(intent);
 
     }

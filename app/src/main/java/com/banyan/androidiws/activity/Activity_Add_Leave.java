@@ -15,7 +15,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AlertDialog;
@@ -31,7 +30,6 @@ import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 import com.banyan.androidiws.R;
 import com.banyan.androidiws.adapter.Adapter_Leave_Request_List;
-import com.banyan.androidiws.fragment.Fragment_Main_Menu;
 import com.banyan.androidiws.global.AppConfig;
 import com.banyan.androidiws.global.Constants;
 import com.banyan.androidiws.global.NestedListview;
@@ -210,7 +208,7 @@ public class Activity_Add_Leave extends AppCompatActivity implements SwipeRefres
             @Override
             public void onClick(View view) {
 
-                Intent intent = new Intent(Activity_Add_Leave.this, Activity_Attendance_Report_For_Months.class);
+                Intent intent = new Intent(Activity_Add_Leave.this, Activity_Payroll_For_Months.class);
                 startActivity(intent);
                 overridePendingTransition(R.anim.slide_from_left, R.anim.slide_to_right);  // close activity
 
@@ -491,6 +489,7 @@ public class Activity_Add_Leave extends AppCompatActivity implements SwipeRefres
                 editor.putString(Activity_Leave_Details.TAG_LEAVE_SUBJECT, str_request_subject);
                 editor.putString(Activity_Leave_Details.TAG_LEAVE_APPLY_REASON, str_request_reason);
                 editor.putString(Activity_Leave_Details.TAG_LEAVE_STATUS, str_request_status);
+                editor.putString(Activity_Leave_Details.TAG_LEAVE_CANCEL_STATUS, str_cancel_status);
                 editor.commit();
 
                 Intent intent = new Intent( Activity_Add_Leave.this, Activity_Leave_Details.class);

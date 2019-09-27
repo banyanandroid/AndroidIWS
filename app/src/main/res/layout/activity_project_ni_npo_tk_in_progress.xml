@@ -434,7 +434,7 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:layout_marginTop="10dp"
-                            android:text="Declaration D"
+                            android:text="Declaration"
                             android:textColor="@color/colorTextPrimary"
                             android:textSize="16sp" />
 
@@ -445,20 +445,7 @@
 
                         </com.banyan.androidiws.global.NestedListview>
 
-                        <androidx.appcompat.widget.AppCompatTextView
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="10dp"
-                            android:text="Declaration O"
-                            android:textColor="@color/colorTextPrimary"
-                            android:textSize="16sp" />
 
-                        <com.banyan.androidiws.global.NestedListview
-                            android:id="@+id/nested_list_view_declaration_o"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content">
-
-                        </com.banyan.androidiws.global.NestedListview>
 
                     </androidx.appcompat.widget.LinearLayoutCompat>
 

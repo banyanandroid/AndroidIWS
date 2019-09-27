@@ -57,6 +57,7 @@ dependencies {
     //image picker
     implementation 'com.github.maayyaannkk:ImagePicker:1.0.3'
 
+
 }
 
 // for firebase notification

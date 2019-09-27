@@ -163,7 +163,7 @@ public class Activity_Project_MM_In_Progress extends AppCompatActivity {
 
     private int count;
 
-    private boolean bol_is_add_image, bol_ptw_copy_image = false, bol_ohs_work_image = false;
+    private boolean bol_is_add_image, bol_ptw_copy_image = false, bol_ohs_work_image = false, bol_is_online;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -174,6 +174,7 @@ public class Activity_Project_MM_In_Progress extends AppCompatActivity {
          * SETUP
          **********************************/
         utility = new Utility();
+        bol_is_online = utility.IsNetworkAvailable(Activity_Project_MM_In_Progress.this);
 
         /*****************************
          *  SESSION
@@ -739,11 +740,11 @@ public class Activity_Project_MM_In_Progress extends AppCompatActivity {
 
                     System.out.println("### " + str_calling_type.equals(TAG_CALLING_TYPE_WORK_SETUP));
 
-                    adapter_declaration_d = new Adapter_Product_Declartion_List(Activity_Project_MM_In_Progress.this, arrayList_declaration_d, Activity_Project_MM_In_Progress.this);
+                    /*adapter_declaration_d = new Adapter_Product_Declartion_List(Activity_Project_MM_In_Progress.this, arrayList_declaration_d, Activity_Project_MM_In_Progress.this, bol_is_online);
                     nested_list_view_declaration_d.setAdapter(adapter_declaration_d);
 
-                    adapter_declaration_o = new Adapter_Product_Declartion_List(Activity_Project_MM_In_Progress.this, arrayList_declaration_o, Activity_Project_MM_In_Progress.this);
-                    nested_list_view_declaration_o.setAdapter(adapter_declaration_o);
+                    adapter_declaration_o = new Adapter_Product_Declartion_List(Activity_Project_MM_In_Progress.this, arrayList_declaration_o, Activity_Project_MM_In_Progress.this, bol_is_online);
+                    nested_list_view_declaration_o.setAdapter(adapter_declaration_o);*/
 
 
                 } catch (JSONException e) {
@@ -1885,13 +1886,13 @@ public class Activity_Project_MM_In_Progress extends AppCompatActivity {
      */
     private void Function_Get_PTW_Status(final String str_dpr_id) {
 
-        System.out.println("###  Function_Get_PTW_Status  AppConfig.URL_PROJECT_UPDATE_REACHED_SITE " + AppConfig.URL_PROJECT_UPDATE_REACHED_SITE);
+        System.out.println("### MM  Function_Get_PTW_Status  AppConfig.URL_PROJECT_UPDATE_REACHED_SITE " + AppConfig.URL_PROJECT_UPDATE_REACHED_SITE);
         StringRequest request = new StringRequest(Request.Method.POST,
                 AppConfig.URL_PROJECT_UPDATE_REACHED_SITE, new Response.Listener<String>() {
 
             @Override
             public void onResponse(String response) {
-                System.out.println("### Function_Get_PTW_Status  AppConfig.URL_PROJECT_UPDATE_REACHED_SITE : onResponse " + response);
+                System.out.println("### MM Function_Get_PTW_Status  AppConfig.URL_PROJECT_UPDATE_REACHED_SITE : onResponse " + response);
                 Log.d("TAG", "### " + response.toString());
                 try {
                     JSONObject obj = new JSONObject(response);

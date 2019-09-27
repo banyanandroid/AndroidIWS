@@ -5,6 +5,11 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.util.Base64;
+
+import java.io.ByteArrayOutputStream;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,6 +53,48 @@ public class DatabaseHandler extends SQLiteOpenHelper {
     private static final String KEY_WP = "wp";
     private static final String KEY_ASSIGNED_BY = "assigned_by";
 
+    // reach site
+    private static final String TABLE_REACH_SITE = "reach_site";
+
+    //declaration
+    private static final String TABLE_DECLARATION = "declaration";
+    private static final String KEY_USER_ID = "user_id";
+    private static final String KEY_DECLARATION_TYPE = "declaration_type";
+    private static final String KEY_DECLARATION = "declaration";
+    private static final String KEY_TEXT = "text";
+    private static final String KEY_CHECK_BOX = "chekbox";
+    private static final String KEY_IMAGE = "image";
+    private static final String KEY_COMMENTS = "comments";
+    private static final String KEY_CUSTOMER_PTW = "customer_ptw";
+
+    //ptw request
+    private static final String TABLE_PTW_REQUEST = "ptw_request";
+    private static final String KEY_PTW_REQUIRED = "ptw_required";
+    private static final String KEY_PTW_NO = "ptw_no";
+    private static final String KEY_PTW_COPY = "ptw_copy";
+
+    //start work
+    private static final String TABLE_START_WORK = "start_work";
+
+    //ohs work photo
+    private static final String TABLE_OHS_WORK_PHOTO = "ohs_work_photo";
+    private static final String KEY_TIME = "time";
+
+    // work status
+    private static final String TABLE_WORK_STATUS = "work_status";
+    private static final String KEY_FINAL_AT = "final_at";
+    private static final String KEY_FIELD_WORK = "field_work";
+
+    //left site
+    private static final String TABLE_LEFT_SITE = "left_site";
+
+    // expense
+    private static final String TABLE_EXPENSE = "expense";
+    private static final String KEY_TRAVEL_COST = "travelcost";
+    private static final String KEY_VEHICLE_COST = "vechiclecost";
+
+    //work completed
+    private static final String TABLE_WORK_COMPLETED = "work_completed";
 
     public DatabaseHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -99,11 +146,83 @@ public class DatabaseHandler extends SQLiteOpenHelper {
                 + KEY_ASSIGNED_BY + " TEXT"
                 + ")";
 
+        String CREATE_REACH_SITE = "CREATE TABLE " + TABLE_REACH_SITE + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_DPR_ID + " TEXT "
+                + ")";
+
+        String CREATE_DECLARATION = "CREATE TABLE " + TABLE_DECLARATION+ "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_DPR_ID + " TEXT, "
+                + KEY_USER_ID + " TEXT, "
+                + KEY_DECLARATION_TYPE + " TEXT, "
+                + KEY_DECLARATION + " TEXT, "
+                + KEY_TEXT + " TEXT, "
+                + KEY_CHECK_BOX + " TEXT, "
+                + KEY_IMAGE + " BLOB, "
+                + KEY_COMMENTS + " TEXT,"
+                + KEY_CUSTOMER_PTW + " TEXT"
+                + ")";
+
+        String CREATE_PTW_REQUEST = "CREATE TABLE " + TABLE_PTW_REQUEST+ "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_DPR_ID + " TEXT, "
+                + KEY_PTW_REQUIRED + " TEXT, "
+                + KEY_PTW_NO + " TEXT, "
+                + KEY_PTW_COPY + " BLOB "
+                + ")";
+
+        String CREATE_START_WORK = "CREATE TABLE " + TABLE_START_WORK + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_DPR_ID + " TEXT "
+                + ")";
+
+        String CREATE_OHS_WORK_PHOTO = "CREATE TABLE " + TABLE_OHS_WORK_PHOTO + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_DPR_ID + " TEXT, "
+                + KEY_USER_ID + " TEXT, "
+                + KEY_IMAGE + " BLOB, "
+                + KEY_TIME + " TEXT "
+                + ")";
+
+        String CREATE_WORK_STATUS = "CREATE TABLE " + TABLE_WORK_STATUS + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_DPR_ID + " TEXT, "
+                + KEY_FINAL_AT + " TEXT, "
+                + KEY_FIELD_WORK + " TEXT "
+                + ")";
+
+        String CREATE_LEFT_SITE = "CREATE TABLE " + TABLE_LEFT_SITE + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_DPR_ID + " TEXT "
+                + ")";
+
+        String CREATE_EXPENSE = "CREATE TABLE " + TABLE_EXPENSE + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_DPR_ID + " TEXT, "
+                + KEY_TRAVEL_COST + " TEXT, "
+                + KEY_VEHICLE_COST + " TEXT "
+                + ")";
+
+        String CREATE_WORK_COMPLETED = "CREATE TABLE " + TABLE_WORK_COMPLETED + "("
+                + KEY_ID + " INTEGER PRIMARY KEY,"
+                + KEY_DPR_ID + " TEXT "
+                + ")";
 
         db.execSQL(CREATE_CONTACTS_TABLE);
         db.execSQL(CREATE_PROFILE_TABLE);
         db.execSQL(CREATE_DASHBOARD_TABLE);
         db.execSQL(CREATE_IN_PROGRESS_PROJECT_TABLE);
+
+        db.execSQL(CREATE_REACH_SITE);
+        db.execSQL(CREATE_DECLARATION);
+        db.execSQL(CREATE_PTW_REQUEST);
+        db.execSQL(CREATE_START_WORK);
+        db.execSQL(CREATE_OHS_WORK_PHOTO);
+        db.execSQL(CREATE_WORK_STATUS);
+        db.execSQL(CREATE_LEFT_SITE);
+        db.execSQL(CREATE_EXPENSE);
+        db.execSQL(CREATE_WORK_COMPLETED);
 
     }
 
@@ -511,6 +630,669 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         return in_progress_project;
     }
 
+
+
+    /******************************
+     *  REACH SITE
+     *******************************/
+
+    public long Function_Add_Reach_Site(Model_DPR_ID model_dpr_id) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_DPR_ID, model_dpr_id.getDPR_ID()); // Model_PTW_Status Name
+
+        // Inserting Row
+        Long long_result = db.insert(TABLE_REACH_SITE, null, values);
+        //2nd argument is String containing nullColumnHack
+        db.close(); // Closing database connection
+
+        return long_result;
+    }
+
+    public int Function_Get_Reached_Site_Count() {
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_REACH_SITE;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // return contact list
+        return cursor.getCount();
+    }
+
+    public boolean Function_Is_Reach_Site_Exist(String str_dpr_id) {
+
+        boolean bol_is_exist;
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_REACH_SITE + " WHERE "+KEY_DPR_ID + " = "+str_dpr_id;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        return cursor.moveToFirst();
+    }
+
+    public List<Model_DPR_ID> Function_Get_All_Reach_Site() {
+        List<Model_DPR_ID> list_reached_site = new ArrayList<Model_DPR_ID>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_REACH_SITE;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+
+            do {
+                Model_DPR_ID project = new Model_DPR_ID(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1));
+
+                // Adding contact to list
+                list_reached_site.add(project);
+            } while (cursor.moveToNext());
+
+        }
+
+        // return contact list
+        return list_reached_site;
+    }
+
+
+    public Integer Function_Delete_Reached_Site(Model_DPR_ID model_dpr_id) {
+
+        System.out.println("### Function_Delete_Reached_Site ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Integer int_result = db.delete(TABLE_REACH_SITE, KEY_ID + " = ?",
+                new String[] { String.valueOf(model_dpr_id.getID()) });
+        db.close();
+        return int_result;
+    }
+
+    /******************************
+     *  DECLARATION
+     *******************************/
+
+    public Long Function_Add_Declaration(Model_DB_Declaration model_declaration) {
+
+        byte[] data = getBitmapAsByteArray(model_declaration.getImage());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_DPR_ID, model_declaration.getDPR_ID());
+        values.put(KEY_USER_ID, model_declaration.getUserid());
+        values.put(KEY_DECLARATION_TYPE, model_declaration.getDeclaration_type());
+        values.put(KEY_DECLARATION, model_declaration.getDeclaration());
+        values.put(KEY_TEXT, model_declaration.getText());
+        values.put(KEY_CHECK_BOX, model_declaration.getCheckbox());
+        values.put(KEY_IMAGE, data);
+        values.put(KEY_COMMENTS, model_declaration.getComments());
+        values.put(KEY_CUSTOMER_PTW, model_declaration.getCustomer_ptw());
+
+        // Inserting Row
+        Long long_result = db.insert(TABLE_DECLARATION, null, values);
+        //2nd argument is String containing nullColumnHack
+        db.close(); // Closing database connection
+
+        return long_result;
+
+    }
+
+    public int Function_Update_Declaration(Model_DB_Declaration model_declaration) {
+
+        System.out.println("### Function_Update_Declaration ");
+        System.out.println("### DPR ID " + model_declaration.getDPR_ID());
+        System.out.println("### KEY_DECLARATION " + model_declaration.getDeclaration());
+
+        Bitmap bitmpa = model_declaration.getImage();
+        byte[] data = null;
+        if (bitmpa != null){
+            data = getBitmapAsByteArray(bitmpa);
+        }
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_DPR_ID, model_declaration.getDPR_ID());
+        values.put(KEY_USER_ID, model_declaration.getUserid());
+        values.put(KEY_DECLARATION_TYPE, model_declaration.getDeclaration_type());
+        values.put(KEY_DECLARATION, model_declaration.getDeclaration());
+        values.put(KEY_TEXT, model_declaration.getText());
+        values.put(KEY_CHECK_BOX, model_declaration.getCheckbox());
+        values.put(KEY_IMAGE, data);
+        values.put(KEY_COMMENTS, model_declaration.getComments());
+        values.put(KEY_CUSTOMER_PTW, model_declaration.getCustomer_ptw());
+
+        // updating row
+        return db.update(TABLE_DECLARATION, values, KEY_DPR_ID + " = ? AND "+ KEY_DECLARATION + " = ? ",
+                new String[] { String.valueOf(model_declaration.getDPR_ID()), model_declaration.getDeclaration() });
+
+    }
+
+    public static byte[] getBitmapAsByteArray(Bitmap bitmap) {
+
+        byte [] array_byte = null;
+        if (bitmap != null){
+            ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+            bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+            array_byte = outputStream.toByteArray();
+        }
+
+        return array_byte;
+    }
+
+    public int Function_Get_Declaration_Count() {
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_DECLARATION;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // return contact list
+        return cursor.getCount();
+    }
+
+    public int Function_Get_Declaration_Count(String str_dpr_id) {
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_DECLARATION + " WHERE "+KEY_DPR_ID + " = "+str_dpr_id;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // return contact list
+        return cursor.getCount();
+    }
+
+    public List<Model_DB_Declaration> Function_Get_All_Declaration(String str_dpr_id) {
+
+        System.out.println("### Function_Get_All_Declaration ");
+
+        List<Model_DB_Declaration> list_reached_site = new ArrayList<Model_DB_Declaration>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_DECLARATION + " WHERE "+KEY_DPR_ID +" = "+str_dpr_id + " ORDER BY "+KEY_ID + " ASC";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                byte[] imgByte = cursor.getBlob(7);
+                //String encodedstring = Base64.encodeToString(imgByte, 0);
+                Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
+
+                Model_DB_Declaration project = new Model_DB_Declaration(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        null,
+                        cursor.getString(8),
+                        cursor.getString(9),
+                        ""
+                        );
+
+                // Adding contact to list
+                list_reached_site.add(project);
+            } while (cursor.moveToNext());
+
+        }
+
+        // return contact list
+        return list_reached_site;
+    }
+
+    public List<Model_DB_Declaration> Function_Get_All_Declaration() {
+
+        // to retrieve bitmap as string using image url field
+
+        List<Model_DB_Declaration> list_reached_site = new ArrayList<Model_DB_Declaration>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_DECLARATION ;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+
+            do {
+
+                byte[] imgByte = cursor.getBlob(7);
+
+                String encodedstring = "";
+                if (imgByte != null){
+                    encodedstring = Base64.encodeToString(imgByte, 0);
+                }
+
+
+                Model_DB_Declaration project = new Model_DB_Declaration(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        null,
+                        cursor.getString(8),
+                        cursor.getString(9),
+                        encodedstring
+                );
+
+                // Adding contact to list
+                list_reached_site.add(project);
+            } while (cursor.moveToNext());
+
+        }
+
+        // return contact list
+        return list_reached_site;
+    }
+
+
+    public Integer Function_Delete_Declaration(Model_DB_Declaration model_declaration) {
+
+        System.out.println("### Function_Delete_Declaration ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Integer int_result = db.delete(TABLE_DECLARATION, KEY_ID + " = ?",
+                new String[] { String.valueOf(model_declaration.getID()) });
+        db.close();
+
+        return int_result;
+    }
+
+
+    /******************************
+     *  PTW REQUEST
+     *******************************/
+
+    public Long Function_Add_PTW_Request(Model_PTW_Request model_ptw_request) {
+
+        Bitmap bitmap = model_ptw_request.getPtwcopy();
+
+        byte[] data = null;
+        if (bitmap != null){
+             data = getBitmapAsByteArray(model_ptw_request.getPtwcopy());
+        }
+
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_DPR_ID, model_ptw_request.getDPR_ID());
+        values.put(KEY_PTW_REQUIRED, model_ptw_request.getPtwrequired());
+        values.put(KEY_PTW_NO, model_ptw_request.getPtwno());
+        values.put(KEY_PTW_COPY, data);
+
+        // Inserting Row
+        Long long_result = db.insert(TABLE_PTW_REQUEST, null, values);
+        //2nd argument is String containing nullColumnHack
+        db.close(); // Closing database connection
+
+        return long_result;
+    }
+
+    public int Function_Get_PTW_Request_Count() {
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_PTW_REQUEST;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // return contact list
+        return cursor.getCount();
+    }
+
+    public List<Model_PTW_Request> Function_Get_All_PTW_REQUEST() {
+        List<Model_PTW_Request> list_reached_site = new ArrayList<Model_PTW_Request>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_PTW_REQUEST;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+
+
+            do {
+
+                byte[] imgByte = cursor.getBlob(4);
+
+                Bitmap bitmap = null;
+                if (imgByte != null){
+                     bitmap = BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
+                }
+
+
+                Model_PTW_Request project = new Model_PTW_Request(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        bitmap
+                );
+
+                // Adding contact to list
+                list_reached_site.add(project);
+            } while (cursor.moveToNext());
+
+        }
+
+        // return contact list
+        return list_reached_site;
+    }
+
+    public Model_PTW_Request Function_Get_PTW_Request(String str_dpr_id) {
+
+        Model_PTW_Request project = null;
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_PTW_REQUEST + " WHERE "+KEY_DPR_ID + " = "+str_dpr_id;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+
+
+            byte[] imgByte = cursor.getBlob(4);
+            Bitmap bitmap = null;
+            if (imgByte != null){
+                bitmap = BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
+            }
+
+             project = new Model_PTW_Request(Integer.parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    bitmap
+            );
+
+        }
+
+        // return contact list
+        return project;
+    }
+
+    public boolean Function_Is_PTW_Request_Exist(String str_dpr_id) {
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_PTW_REQUEST + " WHERE "+KEY_DPR_ID + " = "+str_dpr_id;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        // return contact list
+        return cursor.moveToFirst();
+    }
+
+
+    public Integer Function_Delete_PTW_Request(Model_PTW_Request model_ptw_request) {
+
+        System.out.println("### Function_Delete_PTW_Request ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Integer int_result = db.delete(TABLE_PTW_REQUEST, KEY_ID + " = ?",
+                new String[] { String.valueOf(model_ptw_request.getID()) });
+        db.close();
+
+        return int_result;
+    }
+
+    /******************************
+     *  START WORK
+     *******************************/
+
+    public Long Function_Add_Start_Work(Model_DPR_ID model_dpr_id) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_DPR_ID, model_dpr_id.getDPR_ID()); // Model_PTW_Status Name
+
+        // Inserting Row
+        Long long_result = db.insert(TABLE_START_WORK, null, values);
+        //2nd argument is String containing nullColumnHack
+        db.close(); // Closing database connection
+
+        return long_result;
+    }
+
+    public int Function_Get_Start_Work_Count() {
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_START_WORK;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // return contact list
+        return cursor.getCount();
+    }
+
+    public List<Model_DPR_ID> Function_Get_All_Start_Work() {
+        List<Model_DPR_ID> list_reached_site = new ArrayList<Model_DPR_ID>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_START_WORK;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+
+
+            do {
+
+                Model_DPR_ID project = new Model_DPR_ID(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1));
+
+                // Adding contact to list
+                list_reached_site.add(project);
+            } while (cursor.moveToNext());
+
+        }
+
+        // return contact list
+        return list_reached_site;
+    }
+
+
+    public Boolean Function_Is_Start_Work_Exist(String str_dpr_id) {
+
+        Boolean bol_is_exist = false ;
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_START_WORK + " WHERE "+KEY_DPR_ID + " = "+str_dpr_id;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+
+            bol_is_exist = true;
+
+        }
+
+        // return contact list
+        return bol_is_exist;
+    }
+
+    public Integer Function_Delete_Start_Work(Model_DPR_ID model_dpr_id) {
+
+        System.out.println("### Function_Delete_Start_Work ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Integer int_result = db.delete(TABLE_START_WORK, KEY_ID + " = ?",
+                new String[] { String.valueOf(model_dpr_id.getID()) });
+        db.close();
+        return int_result;
+    }
+
+    /******************************
+     *  OHS WORK
+     *******************************/
+
+    public Long Function_Add_OHS_Work(Model_OHS_Work model_ohs_work) {
+
+        byte[] data = getBitmapAsByteArray(model_ohs_work.getImage());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_DPR_ID, model_ohs_work.getDPR_ID());
+        values.put(KEY_USER_ID, model_ohs_work.getUserid());
+        values.put(KEY_IMAGE, data);
+        values.put(KEY_TIME, model_ohs_work.getTime());
+
+        // Inserting Row
+        Long long_result = db.insert(TABLE_OHS_WORK_PHOTO, null, values);
+        //2nd argument is String containing nullColumnHack
+        db.close(); // Closing database connection
+
+        return long_result;
+    }
+
+    public int Function_Get_OHS_Work_Count() {
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_OHS_WORK_PHOTO;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // return contact list
+        return cursor.getCount();
+    }
+
+    public List<Model_OHS_Work> Function_Get_All_OHS_Work() {
+        List<Model_OHS_Work> list_reached_site = new ArrayList<Model_OHS_Work>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_OHS_WORK_PHOTO;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+
+            byte[] imgByte = cursor.getBlob(3);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(imgByte, 0, imgByte.length);
+
+            do {
+                Model_OHS_Work project = new Model_OHS_Work(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        bitmap,
+                        cursor.getString(4));
+
+                // Adding contact to list
+                list_reached_site.add(project);
+            } while (cursor.moveToNext());
+
+        }
+
+        // return contact list
+        return list_reached_site;
+    }
+
+
+    public Integer Function_Delete_OHS_Work(Model_OHS_Work model_ohs_work) {
+
+        System.out.println("### Function_Delete_OHS_Work ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Integer int_result = db.delete(TABLE_OHS_WORK_PHOTO, KEY_ID + " = ?",
+                new String[] { String.valueOf(model_ohs_work.getID()) });
+        db.close();
+        return int_result;
+    }
+
+    /******************************
+     *  WORK STATUS
+     *******************************/
+
+    public void Function_Add_Work_Status(Model_Work_Status model_work_status) {
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(KEY_DPR_ID, model_work_status.getDPR_ID()); // Model_PTW_Status Name
+        values.put(KEY_FINAL_AT, model_work_status.getFinal_at()); // Model_PTW_Status Name
+        values.put(KEY_FIELD_WORK, model_work_status.getField_work()); // Model_PTW_Status Name
+
+        // Inserting Row
+        db.insert(TABLE_WORK_STATUS, null, values);
+        //2nd argument is String containing nullColumnHack
+        db.close(); // Closing database connection
+
+    }
+
+    public int Function_Get_Work_Status_Count() {
+
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_WORK_STATUS;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // return contact list
+        return cursor.getCount();
+    }
+
+    public List<Model_Work_Status> Function_Get_All_Work_Status() {
+        List<Model_Work_Status> list_reached_site = new ArrayList<Model_Work_Status>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_WORK_STATUS;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+
+            do {
+                Model_Work_Status project = new Model_Work_Status(Integer.parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3));
+
+                // Adding contact to list
+                list_reached_site.add(project);
+            } while (cursor.moveToNext());
+
+        }
+
+        // return contact list
+        return list_reached_site;
+    }
+
+
+    public void Function_Delete_Work_Status(Model_Work_Status model_work_status) {
+
+        System.out.println("### Function_Delete_OHS_Work ");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_WORK_STATUS, KEY_ID + " = ?",
+                new String[] { String.valueOf(model_work_status.getID()) });
+        db.close();
+    }
+
+
     /*****************************
     * PTW
     *****************************/
@@ -589,6 +1371,7 @@ public class DatabaseHandler extends SQLiteOpenHelper {
         db.delete(TABLE_PTW_STATUS, KEY_ID + " = ?",
                 new String[] { String.valueOf(contact.getID()) });
         db.close();
+
     }
 
     // Getting contacts Count

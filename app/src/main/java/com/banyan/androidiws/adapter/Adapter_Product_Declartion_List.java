@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
+import android.util.Base64;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,7 +22,9 @@ import androidx.cardview.widget.CardView;
 import com.banyan.androidiws.R;
 import com.banyan.androidiws.activity.Activity_Project_NI_NPO_TK_In_Progress;
 import com.banyan.androidiws.activity.Activity_View_Image;
+import com.banyan.androidiws.database.Model_DB_Declaration;
 import com.banyan.androidiws.global.AppConfig;
+import com.banyan.androidiws.global.Utility;
 import com.bumptech.glide.Glide;
 
 
@@ -45,16 +48,19 @@ public class Adapter_Product_Declartion_List extends BaseAdapter {
 
     private final SharedPreferences.Editor editor;
 
-    private ArrayList<HashMap<String, String>> data;
+    private final boolean bol_is_online;
+
+    private ArrayList<Model_DB_Declaration> data;
     private Context context;
     public String[] bgColors;
 
-    public Adapter_Product_Declartion_List(Context context, ArrayList<HashMap<String, String>> data, Activity activity) {
+    public Adapter_Product_Declartion_List(Context context, ArrayList<Model_DB_Declaration> data, Activity activity, boolean bol_is_online) {
 
         this.context = context;
         this.data = data;
         bgColors = context.getResources().getStringArray(R.array.string_array_color);
         this.activity = activity;
+        this.bol_is_online = bol_is_online;
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         editor = sharedPreferences.edit();
@@ -95,37 +101,36 @@ public class Adapter_Product_Declartion_List extends BaseAdapter {
             card_view_row.setTag(position);
             linear_layout_image.setTag(position);
 
-            HashMap<String, String> result = new HashMap<>();
-            result = data.get(position);
 
-            String str_declaration_type = result.get(Activity_Project_NI_NPO_TK_In_Progress.TAG_DECLARATION_TYPE);
-            String str_declaration = result.get(Activity_Project_NI_NPO_TK_In_Progress.TAG_DECLARATION);
-            String str_declaration_text = result.get(Activity_Project_NI_NPO_TK_In_Progress.TAG_DECLARATION_TEXT);
-            String str_check_box = result.get(Activity_Project_NI_NPO_TK_In_Progress.TAG_DECLARATION_CHECK_BOX);
-            String str_declaration_image = result.get(Activity_Project_NI_NPO_TK_In_Progress.TAG_DECLARATION_IMAGE);
-            String str_declaration_comment = result.get(Activity_Project_NI_NPO_TK_In_Progress.TAG_DECLARATION_COMMENT);
+            Model_DB_Declaration result = data.get(position);
 
-            System.out.println("### str_declaration_image "+str_declaration_image);
+            String str_declaration_type = result.getDeclaration_type();
+            String str_declaration = result.getDeclaration();
+            String str_declaration_text = result.getText();
+            String str_check_box = result.getCheckbox();
+
+            String str_declaration_comment = result.getComments();
+
+
             System.out.println("### str_check_box "+str_check_box);
 
 
-/*
-            try{
 
-                Bitmap bitmap = decodeSampledBitmapFromResource(str_declaration_image, AppConfig.IMAGE_SIZE, AppConfig.IMAGE_SIZE);
-                image_view_photo.setImageBitmap(bitmap);
+            if (bol_is_online){
 
-            }catch (Exception e){
-                System.out.println("### Exception adapter 1 "+e.getLocalizedMessage());
-            }*/
+                String str_declaration_image_url = result.getImage_url();
+                System.out.println("### str_declaration_image_url "+str_declaration_image_url);
+                if (!str_declaration_image_url.isEmpty())
+                    Glide.with(context)
+                            .load(str_declaration_image_url)
+                            .placeholder(R.drawable.ic_galary)
+                            .into(image_view_photo);
+            }else{
 
+                //Bitmap bitmap_declaration_image = result.getImage();
+                image_view_photo.setImageDrawable(context.getResources().getDrawable(R.drawable.ic_galary));
 
-            if (!str_declaration_image.isEmpty())
-            Glide.with(context)
-                    .load(str_declaration_image)
-                    .placeholder(R.drawable.ic_galary)
-                    .into(image_view_photo);
-
+            }
 
 
             text_view_declaration.setText(str_declaration_text);
@@ -143,13 +148,23 @@ public class Adapter_Product_Declartion_List extends BaseAdapter {
                 public void onClick(View v) {
 
                     Integer int_position = (Integer)v.getTag();
-                    HashMap<String, String> result = new HashMap<>();
-                    result = data.get(int_position);
+                    Model_DB_Declaration result = data.get(int_position);
 
-                    String str_declaration_image = result.get(Activity_Project_NI_NPO_TK_In_Progress.TAG_DECLARATION_IMAGE);
+                    if (bol_is_online){
 
-                    editor.putString(Activity_View_Image.TAG_IMAGE_URL, str_declaration_image);
-                    editor.commit();
+                        String str_declaration_image = result.getImage_url();
+
+                        editor.putString(Activity_View_Image.TAG_IMAGE_URL, str_declaration_image);
+                        editor.commit();
+
+                    }else{
+
+                        Bitmap bitmap = result.getImage();
+                        String str_image = new Utility().Function_BitMapToString(bitmap);
+
+                        editor.putString(Activity_View_Image.TAG_IMAGE_URL, str_image);
+                        editor.commit();
+                    }
 
                     Intent intent = new Intent(context, Activity_View_Image.class);
                     context.startActivity(intent);
@@ -164,15 +179,15 @@ public class Adapter_Product_Declartion_List extends BaseAdapter {
                     try {
 
                         Integer int_position = (Integer)v.getTag();
-                        HashMap<String, String> result = new HashMap<>();
-                        result = data.get(int_position);
 
-                        String str_declaration_type = result.get(Activity_Project_NI_NPO_TK_In_Progress.TAG_DECLARATION_TYPE);
-                        String str_declaration = result.get(Activity_Project_NI_NPO_TK_In_Progress.TAG_DECLARATION);
-                        String str_declaration_text = result.get(Activity_Project_NI_NPO_TK_In_Progress.TAG_DECLARATION_TEXT);
-                        String str_check_box = result.get(Activity_Project_NI_NPO_TK_In_Progress.TAG_DECLARATION_CHECK_BOX);
-                        String str_declaration_image = result.get(Activity_Project_NI_NPO_TK_In_Progress.TAG_DECLARATION_IMAGE);
-                        String str_declaration_comment = result.get(Activity_Project_NI_NPO_TK_In_Progress.TAG_DECLARATION_COMMENT);
+                        Model_DB_Declaration result = data.get(int_position);
+
+                        String str_declaration_type = result.getDeclaration_type();
+                        String str_declaration = result.getDeclaration();
+                        String str_declaration_text = result.getText();
+                        String str_check_box = result.getCheckbox();
+                        String str_declaration_image = "";
+                        String str_declaration_comment = result.getComments();
 
                         System.out.println("### setOnClickListener");
                         System.out.println("### activity simple name "+activity.getClass().getSimpleName());
@@ -204,10 +219,10 @@ public class Adapter_Product_Declartion_List extends BaseAdapter {
 
         for (int count = 0; count < data.size(); count++){
 
-            HashMap<String, String> result = new HashMap<>();
-            result = data.get(count);
 
-            String str_check_box = result.get(Activity_Project_NI_NPO_TK_In_Progress.TAG_DECLARATION_CHECK_BOX);
+            Model_DB_Declaration result = data.get(count);
+
+            String str_check_box = result.getCheckbox();
             if (str_check_box.equals("1")) {
                 is_requested = true;
                 break;

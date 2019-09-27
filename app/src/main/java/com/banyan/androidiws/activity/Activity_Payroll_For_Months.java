@@ -3,7 +3,9 @@ package com.banyan.androidiws.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
@@ -46,8 +48,10 @@ import sun.bob.mcalendarview.listeners.OnMonthChangeListener;
 import sun.bob.mcalendarview.views.ExpCalendarView;
 import sun.bob.mcalendarview.vo.DateData;
 
+import static com.banyan.androidiws.global.AppConfig.URL_PAYSLIP;
 
-public class Activity_Attendance_Report_For_Months extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+
+public class Activity_Payroll_For_Months extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private final String TAG_USER_ID = "userid";
 
@@ -86,11 +90,14 @@ public class Activity_Attendance_Report_For_Months extends AppCompatActivity imp
     private TextView text_total_days,
             text_eligible_leave, text_available_leave, text_total_al, text_total_upl, text_total_bench, text_total_tr, text_total_working_days, text_productive_days;
 
-    private AppCompatButton button_leave_tracker;
+    private AppCompatButton button_leave_tracker, button_pay_slip;
 
     private RequestQueue queue;
     
     private SpotsDialog dialog;
+
+    private SharedPreferences sharedPreferences;
+    private SharedPreferences.Editor editor;
 
     private ArrayList<HashMap<String, String>> arrayList_attendance;
 
@@ -104,19 +111,20 @@ public class Activity_Attendance_Report_For_Months extends AppCompatActivity imp
 
 
 
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_attendance_report_for_month);
+        setContentView(R.layout.activity_payroll_for_month);
         // Inflate the layout for this fragment
 
         /************************
         *  SESSION
         *************************/
         utility = new Utility();
-        Function_Verify_Network_Available(Activity_Attendance_Report_For_Months.this);
+        Function_Verify_Network_Available(Activity_Payroll_For_Months.this);
 
-        session = new Session_Manager(Activity_Attendance_Report_For_Months.this);
+        session = new Session_Manager(Activity_Payroll_For_Months.this);
         session.checkLogin();
 
         HashMap<String, String> user = session.getUserDetails();
@@ -132,14 +140,14 @@ public class Activity_Attendance_Report_For_Months extends AppCompatActivity imp
          *************************/
 
         toolbar = (Toolbar) findViewById(R.id.toolbar);
-        toolbar.setTitle("Attendance Report");
+        toolbar.setTitle("Payroll");
         setSupportActionBar(toolbar);
         toolbar.setNavigationIcon(R.drawable.ic_arrow_back_primary_24dp);
         toolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(Activity_Attendance_Report_For_Months.this, Activity_Main.class);
+                Intent intent = new Intent(Activity_Payroll_For_Months.this, Activity_Main.class);
                 startActivity(intent);
             }
         });
@@ -162,6 +170,7 @@ public class Activity_Attendance_Report_For_Months extends AppCompatActivity imp
         calendar_exp = (ExpCalendarView)  findViewById(R.id.calendar_exp);
 
         button_leave_tracker = (AppCompatButton)  findViewById(R.id.button_leave_tracker);
+        button_pay_slip = (AppCompatButton)  findViewById(R.id.button_pay_slip);
 
         swipe_refresh.setOnRefreshListener(this);
 
@@ -171,7 +180,8 @@ public class Activity_Attendance_Report_For_Months extends AppCompatActivity imp
 
         arrayList_attendance = new ArrayList<>();
 
-
+        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        editor = sharedPreferences.edit();
 
 
         /************************
@@ -209,7 +219,7 @@ public class Activity_Attendance_Report_For_Months extends AppCompatActivity imp
 
                 try {
 
-                    queue = Volley.newRequestQueue(Activity_Attendance_Report_For_Months.this);
+                    queue = Volley.newRequestQueue(Activity_Payroll_For_Months.this);
                     Function_Get_Attendance_Report_For_Month(TAG_CALLING_TYPE_FROM_NORMAL);
 
                 } catch (Exception e) {
@@ -243,7 +253,7 @@ public class Activity_Attendance_Report_For_Months extends AppCompatActivity imp
 
                     swipe_refresh.setRefreshing(true);
 
-                    queue = Volley.newRequestQueue(Activity_Attendance_Report_For_Months.this);
+                    queue = Volley.newRequestQueue(Activity_Payroll_For_Months.this);
                     Function_Get_Attendance_Report_For_Month(TAG_CALLING_TYPE_FROM_CALENDER);
 
                 } catch (Exception e) {
@@ -257,8 +267,48 @@ public class Activity_Attendance_Report_For_Months extends AppCompatActivity imp
             @Override
             public void onClick(View v) {
 
-                Intent intent = new Intent(Activity_Attendance_Report_For_Months.this, Activity_Add_Leave.class);
+                Intent intent = new Intent(Activity_Payroll_For_Months.this, Activity_Add_Leave.class);
                 startActivity(intent);
+
+            }
+        });
+
+        button_pay_slip.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                String str_year = text_year.getText().toString();
+                String str_month = text_month.getText().toString();
+
+                int int_year = Integer.parseInt(str_year);
+
+                if ( ( str_month.equals("August") || str_month.equals("September") || str_month.equals("October")
+                        || str_month.equals("November") || str_month.equals("December") ) && int_year == 2019 ){
+
+                    String str_month_as_no = utility.Function_Month_String_To_Number(str_month);
+
+                    editor.putString(Activity_Web_View.TAG_SCREEN_TITLE, "Payslip");
+                    editor.putString(Activity_Web_View.TAG_URL, URL_PAYSLIP + "/" + str_user_id + "/" + str_month_as_no + "/" + str_year);
+                    editor.commit();
+
+                    Intent intent = new Intent(Activity_Payroll_For_Months.this, Activity_Web_View.class);
+                    startActivity(intent);
+
+                }else if (int_year > 2019){
+
+                    String str_month_as_no = utility.Function_Month_String_To_Number(str_month);
+
+                    editor.putString(Activity_Web_View.TAG_SCREEN_TITLE, "Payslip");
+                    editor.putString(Activity_Web_View.TAG_URL, URL_PAYSLIP + "/" + str_user_id + "/" + str_month_as_no + "/" + str_year);
+                    editor.commit();
+
+                    Intent intent = new Intent(Activity_Payroll_For_Months.this, Activity_Web_View.class);
+                    startActivity(intent);
+
+                }else{
+
+                    TastyToast.makeText(Activity_Payroll_For_Months.this, "Payslip is Not Available", TastyToast.LENGTH_SHORT, TastyToast.ERROR);
+                }
 
             }
         });
@@ -268,9 +318,8 @@ public class Activity_Attendance_Report_For_Months extends AppCompatActivity imp
 
     @Override
     public void onBackPressed() {
-        super.onBackPressed();
 
-        Intent intent = new Intent(Activity_Attendance_Report_For_Months.this, Activity_Main.class);
+        Intent intent = new Intent(Activity_Payroll_For_Months.this, Activity_Main.class);
         startActivity(intent);
 
     }
@@ -344,16 +393,16 @@ public class Activity_Attendance_Report_For_Months extends AppCompatActivity imp
                     } else if (status == 400) {
 
 
-                        TastyToast.makeText(Activity_Attendance_Report_For_Months.this, msg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        TastyToast.makeText(Activity_Payroll_For_Months.this, msg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
 
                     } else if (status == 404) {
 
 
-                        TastyToast.makeText(Activity_Attendance_Report_For_Months.this, msg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
+                        TastyToast.makeText(Activity_Payroll_For_Months.this, msg, TastyToast.LENGTH_LONG, TastyToast.ERROR);
 
                     }
 
-                    queue = Volley.newRequestQueue(Activity_Attendance_Report_For_Months.this);
+                    queue = Volley.newRequestQueue(Activity_Payroll_For_Months.this);
                     Function_Get_Leave_Details();
 
 
@@ -377,7 +426,7 @@ public class Activity_Attendance_Report_For_Months extends AppCompatActivity imp
                 if (error != null)
                     System.out.println("### AppConfig.URL_ATTENDANCE_REPORT_FOR_MONTH onErrorResponse " + error.getLocalizedMessage());
 
-                new Utility().Function_Error_Dialog(Activity_Attendance_Report_For_Months.this);
+                new Utility().Function_Error_Dialog(Activity_Payroll_For_Months.this);
 
             }
         }) {
@@ -504,7 +553,7 @@ public class Activity_Attendance_Report_For_Months extends AppCompatActivity imp
                 if (error != null)
                     System.out.println("### AppConfig.URL_LEAVE_TRACK onErrorResponse " + error.getLocalizedMessage());
 
-                new Utility().Function_Error_Dialog(Activity_Attendance_Report_For_Months.this);
+                new Utility().Function_Error_Dialog(Activity_Payroll_For_Months.this);
 
             }
         }) {
@@ -544,7 +593,7 @@ public class Activity_Attendance_Report_For_Months extends AppCompatActivity imp
     public void Function_Verify_Network_Available(Context context){
         try{
             if (!utility.IsNetworkAvailable(context)){
-                utility.Function_Show_Not_Network_Message(Activity_Attendance_Report_For_Months.this);
+                utility.Function_Show_Not_Network_Message(Activity_Payroll_For_Months.this);
             };
         }catch (Exception e){
             System.out.println("### Exception e "+e.getLocalizedMessage());
@@ -614,7 +663,7 @@ public class Activity_Attendance_Report_For_Months extends AppCompatActivity imp
 
         try {
 
-            queue = Volley.newRequestQueue(Activity_Attendance_Report_For_Months.this);
+            queue = Volley.newRequestQueue(Activity_Payroll_For_Months.this);
             Function_Get_Attendance_Report_For_Month(TAG_CALLING_TYPE_FROM_NORMAL);
 
         } catch (Exception e) {

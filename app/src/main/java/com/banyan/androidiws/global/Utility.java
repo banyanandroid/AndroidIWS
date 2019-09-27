@@ -5,12 +5,15 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.location.Address;
 import android.location.Geocoder;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.os.Environment;
 import android.text.TextUtils;
+import android.util.Base64;
 import android.util.Log;
 import android.util.Patterns;
 import android.view.View;
@@ -24,6 +27,7 @@ import androidx.appcompat.app.AlertDialog;
 import com.banyan.androidiws.R;
 import com.banyan.androidiws.activity.Activity_Web_View;
 
+import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.text.DateFormatSymbols;
 import java.text.ParseException;
@@ -306,5 +310,107 @@ public class Utility {
             return true;
         }
         return false;
+    }
+
+    public String Function_BitMapToString(Bitmap bitmap){
+        ByteArrayOutputStream baos=new  ByteArrayOutputStream();
+        bitmap.compress(Bitmap.CompressFormat.PNG,0, baos);
+        byte [] b=baos.toByteArray();
+        String temp= Base64.encodeToString(b, Base64.DEFAULT);
+        return temp;
+    }
+
+
+    /**
+     * @param encodedString
+     * @return bitmap (from given string)
+     */
+    public Bitmap Function_StringToBitMap(String encodedString){
+        try {
+            byte [] encodeByte=Base64.decode(encodedString,Base64.DEFAULT);
+            Bitmap bitmap= BitmapFactory.decodeByteArray(encodeByte, 0, encodeByte.length);
+            return bitmap;
+        } catch(Exception e) {
+            e.getMessage();
+            return null;
+        }
+    }
+
+    public String Function_Month_String_To_Number (String str_month){
+        switch(str_month) {
+            case "January":
+            case "january":
+            case "jan":
+                str_month = "01";
+                break;
+
+            case "Febuary":
+            case "febuary":
+            case "feb":
+                str_month = "02";
+                break;
+
+            case "March":
+            case "march":
+            case "mar":
+                str_month = "03";
+                break;
+
+            case "April":
+            case "april":
+            case "apr":
+                str_month = "04";
+                break;
+
+            case "May":
+            case "may":
+                str_month = "05";
+                break;
+
+            case "June":
+            case "june":
+            case "jun":
+                str_month = "06";
+                break;
+
+            case "July":
+            case "july":
+            case "jul":
+                str_month = "07";
+                break;
+
+            case "August":
+            case "august":
+            case "aug":
+                str_month = "08";
+                break;
+
+            case "September":
+            case "september":
+            case "sep":
+            case "sept":
+                str_month = "09";
+                break;
+
+            case "October":
+            case "october":
+            case "oct":
+                str_month = "10";
+                break;
+
+            case "November":
+            case "november":
+            case "nov":
+                str_month = "11";
+                break;
+
+            case "December":
+            case "december":
+            case "dec":
+                str_month = "12";
+                break;
+        }
+
+        return str_month;
     }
 }

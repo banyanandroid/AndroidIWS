@@ -966,6 +966,19 @@
                                 </LinearLayout>
 
                             </LinearLayout>
+
+                            <androidx.appcompat.widget.AppCompatButton
+                                android:id="@+id/button_pay_slip"
+                                android:layout_width="200dp"
+                                android:layout_height="wrap_content"
+                                android:text="Pay Slip"
+                                android:textColor="@android:color/white"
+                                android:layout_marginTop="10dp"
+                                android:gravity="center"
+                                android:layout_gravity="center"
+                                android:background="@drawable/bg_button"
+                                ></androidx.appcompat.widget.AppCompatButton>
+
                         </LinearLayout>
                     </LinearLayout>
                 </androidx.cardview.widget.CardView>
